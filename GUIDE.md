@@ -381,3 +381,214 @@ Scaffold(endDrawer: const TokenInspector())
 - Does not require specific fonts (but works better with variable fonts)
 
 Everything is opt-in and composable. Use the tokens, ignore the templates. Use the shapes, ignore the motion. Mix and match.
+
+---
+
+## Expressive Icons
+
+M3 Expressive doesn't change icon glyphs — it changes how icons are **presented**. Icons sit inside shaped, colored containers with proper optical sizing.
+
+### The problem
+
+Standard Flutter icons are flat — just a glyph on a background. In M3 Expressive, icons appear inside containers (circles, squircles, organic shapes) with tonal colors, and respond to state changes.
+
+### ExpressiveIcon
+
+Wraps any `IconData` in a shaped container:
+
+```dart
+ExpressiveIcon(Icons.favorite,
+  size: ExpressiveIconSize.large,        // small, medium, large, extraLarge
+  shapeType: ExpressiveShapeType.organic, // rounded, squircle, organic, full
+  containerColor: scheme.primaryContainer,
+  iconColor: scheme.onPrimaryContainer,
+)
+```
+
+Size mapping:
+
+| Size       | Icon | Container |
+| ---------- | ---- | --------- |
+| small      | 20px | 32px      |
+| medium     | 24px | 40px      |
+| large      | 28px | 48px      |
+| extraLarge | 36px | 64px      |
+
+### Custom shapes on icons
+
+```dart
+// Use any of the 35 MaterialShapes as the icon container
+ExpressiveIcon(Icons.star,
+  shape: MaterialShapes.heart,  // custom shape points
+)
+```
+
+### Interactive icons
+
+```dart
+ExpressiveIcon(Icons.add,
+  onPressed: _handleAdd,
+  tooltip: 'Add item',
+)
+```
+
+### ExpressiveIconTheme
+
+Apply expressive icon styling globally through `IconTheme`:
+
+```dart
+// Standard (outlined)
+IconTheme(
+  data: ExpressiveIconTheme.expressive(scheme: scheme, size: 24),
+  child: myWidget,
+)
+
+// Filled (for selected states) — sets fill=1, weight=700, grade=200
+IconTheme(
+  data: ExpressiveIconTheme.expressiveFilled(scheme: scheme),
+  child: myWidget,
+)
+```
+
+The theme sets `opticalSize`, `weight`, `grade`, and `fill` — which variable icon fonts (like Material Symbols) respond to automatically.
+
+### Pairing with Material Symbols
+
+For the best experience, use the `material_symbols_icons` package:
+
+```yaml
+dependencies:
+  material_expressive: ^0.3.0
+  material_symbols_icons: ^4.0.0
+```
+
+```dart
+import 'package:material_symbols_icons/symbols.dart';
+
+ExpressiveIcon(Symbols.rocket_launch,
+  size: ExpressiveIconSize.large,
+  shapeType: ExpressiveShapeType.organic,
+)
+```
+
+Our `ExpressiveIconTheme` sets the variable font axes (`opsz`, `wght`, `FILL`, `GRAD`) that Material Symbols responds to — so icons automatically look heavier when selected, lighter when inactive.
+
+---
+
+## Loading & Progress Indicators
+
+M3 Expressive introduces distinctive loading animations — wavy tracks, segmented arcs, organic blobs, and morphing shapes.
+
+### When to use which
+
+| Indicator                       | Best for                                           |
+| ------------------------------- | -------------------------------------------------- |
+| `WavyLinearProgressIndicator`   | File uploads, downloads, long operations (playful) |
+| `WavyCircularProgressIndicator` | Page loads, refresh actions (playful)              |
+| `ContainedLoadingIndicator`     | Partitioned/step progress, Chrome-style loading    |
+| `OrganicLoadingIndicator`       | Ambient loading, splash screens (organic feel)     |
+| `PulsingDotsIndicator`          | Chat typing indicators, waiting states             |
+| `MorphingShapeIndicator`        | Brand-forward loading, onboarding                  |
+
+### Wavy Linear Progress
+
+A sine wave replaces the flat progress track:
+
+```dart
+// Determinate (shows progress)
+WavyLinearProgressIndicator(value: 0.65)
+
+// Indeterminate (unknown duration)
+WavyLinearProgressIndicator()
+
+// Customized
+WavyLinearProgressIndicator(
+  value: _progress,
+  height: 8,
+  waveAmplitude: 4,     // how tall the wave peaks are
+  waveLength: 32,       // distance between wave peaks
+  color: scheme.tertiary,
+  backgroundColor: scheme.surfaceContainerHighest,
+)
+```
+
+### Wavy Circular Progress
+
+The circular track undulates — the radius oscillates along the circumference:
+
+```dart
+// Determinate
+WavyCircularProgressIndicator(value: 0.4)
+
+// Indeterminate (rotating wave segment)
+WavyCircularProgressIndicator()
+
+// Customized
+WavyCircularProgressIndicator(
+  size: 64,
+  strokeWidth: 5,
+  waveAmplitude: 3,    // how much the radius varies
+  waveCycles: 8,       // number of bumps around the circle
+)
+```
+
+### Contained/Segmented Loading
+
+Segmented arcs that fill progressively (like Chrome's new tab loading):
+
+```dart
+ContainedLoadingIndicator(
+  segments: 4,          // number of arc segments
+  gapDegrees: 12,      // gap between segments
+  size: 48,
+  strokeWidth: 4,
+)
+```
+
+### Organic Blob
+
+A cluster of soft circles orbiting each other:
+
+```dart
+OrganicLoadingIndicator(
+  size: 48,
+  blobCount: 3,
+  color: scheme.primary,
+)
+```
+
+### Pulsing Dots
+
+Classic typing/waiting indicator:
+
+```dart
+PulsingDotsIndicator(
+  size: 48,
+  dotCount: 3,
+  color: scheme.primary,
+)
+```
+
+### Morphing Shape
+
+A shape that continuously morphs between circle, square, and diamond:
+
+```dart
+MorphingShapeIndicator(size: 48)
+```
+
+### Theming
+
+All indicators use `Theme.of(context).colorScheme.primary` by default — so they automatically match your seed color. Override with the `color` parameter when needed.
+
+---
+
+## What this does NOT do
+
+- Does not replace `ElevatedButton` with `ExpressiveButton`
+- Does not require you to use custom widgets
+- Does not break if you use standard Material alongside it
+- Does not add runtime overhead beyond what your animations need
+- Does not require specific fonts (but works better with variable fonts)
+
+Everything is opt-in and composable. Use the tokens, ignore the templates. Use the shapes, ignore the motion. Mix and match.

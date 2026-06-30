@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.4.0
+
+### Expressive Icons
+
+- `ExpressiveIcon` — any icon in a shaped, colored container (small/medium/large/extraLarge)
+- `ExpressiveIconTheme.expressive()` — icon theme with optical sizing and weight
+- `ExpressiveIconTheme.expressiveFilled()` — filled variant for selected states
+- Works with standard `Icons.*` and third-party icon packages (material_symbols_icons, etc.)
+
+### Wavy Progress Indicators
+
+- `WavyLinearProgressIndicator` — sinusoidal wave track (determinate + indeterminate)
+- `WavyCircularProgressIndicator` — circular track with wave undulation (determinate + indeterminate)
+
 ## 0.3.0
 
 ### Vibrant Colors & Harmonization

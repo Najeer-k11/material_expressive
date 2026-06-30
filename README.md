@@ -338,6 +338,10 @@ ShapeContainerTransform(
 
 ```dart
 ContainedLoadingIndicator(segments: 4)   // M3 Expressive segmented arc
+WavyLinearProgressIndicator(value: 0.6)  // wavy determinate linear
+WavyLinearProgressIndicator()            // wavy indeterminate linear
+WavyCircularProgressIndicator(value: 0.4) // wavy determinate circular
+WavyCircularProgressIndicator()          // wavy indeterminate circular
 OrganicLoadingIndicator()                 // blob animation
 PulsingDotsIndicator()                    // pulsing dots
 MorphingShapeIndicator()                  // morphing shape
@@ -356,6 +360,40 @@ ExpressiveSurface(
 ```
 
 Types: `surface`, `containerLow`, `container`, `containerHigh`, `primaryTinted`, `secondaryTinted`, `tertiaryTinted`.
+
+---
+
+## Expressive Icons
+
+Standard `Icons.*` work as-is. This adds the **M3 Expressive presentation** — shaped containers, sizing, optical adjustments:
+
+```dart
+// Icon in a shaped container
+ExpressiveIcon(Icons.favorite,
+  size: ExpressiveIconSize.large,
+  shapeType: ExpressiveShapeType.organic,
+  containerColor: scheme.primaryContainer,
+  iconColor: scheme.onPrimaryContainer,
+)
+
+// Small contained icon with tap
+ExpressiveIcon(Icons.add,
+  size: ExpressiveIconSize.small,
+  filled: true,
+  onPressed: () {},
+)
+
+// Apply expressive icon theme globally
+IconTheme(
+  data: ExpressiveIconTheme.expressive(scheme: scheme),
+  child: ...,
+)
+```
+
+> **Tip:** For the latest Material Symbols variable font icons, pair this package
+> with [material_symbols_icons](https://pub.dev/packages/material_symbols_icons).
+> Our `ExpressiveIconTheme` sets `opticalSize`, `weight`, `grade`, and `fill`
+> which variable icon fonts respond to.
 
 ---
 

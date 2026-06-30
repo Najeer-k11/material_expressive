@@ -1,6 +1,7 @@
 /// Components: surfaces, state layers, loading indicators, animated icons,
 /// button groups, split buttons, floating toolbar, carousel, dialogs,
-/// bottom sheets, snackbars, search bar, and theme extensions.
+/// bottom sheets, snackbars, search bar, expressive icons, wavy progress,
+/// and theme extensions.
 library;
 
 export 'src/components/surfaces.dart';
@@ -18,3 +19,5 @@ export 'src/components/expressive_bottom_sheet.dart';
 export 'src/components/expressive_dialog.dart';
 export 'src/components/expressive_snackbar.dart';
 export 'src/components/expressive_search_bar.dart';
+export 'src/components/expressive_icon.dart';
+export 'src/components/wavy_progress.dart';
