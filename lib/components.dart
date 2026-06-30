@@ -20,4 +20,7 @@ export 'src/components/expressive_dialog.dart';
 export 'src/components/expressive_snackbar.dart';
 export 'src/components/expressive_search_bar.dart';
 export 'src/components/expressive_icon.dart';
+export 'src/components/expressive_fab.dart';
+export 'src/components/expressive_input_themes.dart';
+export 'src/components/expressive_chip.dart';
 export 'src/components/wavy_progress.dart';

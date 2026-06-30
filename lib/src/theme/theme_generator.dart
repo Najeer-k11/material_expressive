@@ -9,6 +9,7 @@ import '../tokens/opacity_tokens.dart';
 import '../tokens/state_tokens.dart';
 import '../tokens/shape_tokens.dart';
 import '../motion/page_transitions.dart';
+import 'vibrant_colors.dart';
 import 'expressive_theme_data.dart';
 
 /// Generates expressive themes from a seed color.
@@ -22,15 +23,35 @@ class ExpressiveTheme {
     ExpressiveRadiusTokens? radius,
     ExpressiveMotionTokens? motion,
     String? fontFamily,
+
+    /// How much to boost saturation (0.0 = standard M3, 0.3 = very vibrant).
+    double vibrancy = 0.2,
+
+    /// Whether to keep dark mode colors vibrant (true = M3 Expressive style).
+    bool vibrantDarkMode = true,
+
+    /// Pass an existing light ColorScheme (e.g. from dynamic_color).
+    /// If provided, seedColor/vibrancy are ignored for light theme.
+    ColorScheme? lightColorScheme,
+
+    /// Pass an existing dark ColorScheme.
+    ColorScheme? darkColorScheme,
   }) {
-    final lightScheme = ColorScheme.fromSeed(
-      seedColor: seedColor,
-      brightness: Brightness.light,
-    );
-    final darkScheme = ColorScheme.fromSeed(
-      seedColor: seedColor,
-      brightness: Brightness.dark,
-    );
+    // Use provided schemes or generate vibrant ones
+    final lightScheme =
+        lightColorScheme ??
+        VibrantColorScheme.fromSeed(
+          seedColor: seedColor,
+          brightness: Brightness.light,
+          saturationBoost: vibrancy,
+        );
+    final darkScheme =
+        darkColorScheme ??
+        VibrantColorScheme.fromSeed(
+          seedColor: seedColor,
+          brightness: Brightness.dark,
+          saturationBoost: vibrantDarkMode ? vibrancy * 1.5 : vibrancy * 0.5,
+        );
 
     final resolvedRadius = radius ?? ExpressiveRadiusTokens.standard;
     final resolvedMotion = motion ?? ExpressiveMotionTokens.standard;

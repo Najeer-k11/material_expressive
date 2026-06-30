@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0
+
+### Color Vibrancy & Image Color getter
+
+- Color vibrancy field added in theme applying, where you can increase the hues. so that they donot look dimmed in dark theme
+- Fixed Some shapes and some components like `ExpressiveButtonGroup`
+- you can pass dynamic color to this theme constructor from dynamic_color package
+
 ## 0.4.0
 
 ### Expressive Icons

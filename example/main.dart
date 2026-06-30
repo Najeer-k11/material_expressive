@@ -22,6 +22,7 @@ class _ExpressiveExampleAppState extends State<ExpressiveExampleApp> {
     final theme = ExpressiveTheme.fromSeed(
       seedColor: _seedColor,
       shapeType: _shapeType,
+      vibrancy: 0.3,
     );
 
     return ExpressiveThemeProvider(

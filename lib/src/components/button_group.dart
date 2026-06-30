@@ -1,107 +1,94 @@
 import 'package:flutter/material.dart';
 
-/// A group of connected buttons (M3 Expressive button group).
+/// A connected button group where the active button morphs to pill shape.
 ///
-/// Not a wrapper — it uses standard Material buttons but arranges them
-/// with connected shape theming (first/middle/last get different radii).
+/// M3 Expressive style: buttons share a container, the selected one
+/// "pops out" as a pill/stadium while others remain flat segments.
 class ExpressiveButtonGroup extends StatelessWidget {
   const ExpressiveButtonGroup({
     super.key,
     required this.buttons,
     this.direction = Axis.horizontal,
-    this.spacing = 0,
-    this.borderRadius = 28,
     this.selectedIndex,
     this.onSelected,
+    this.height = 44,
+    this.backgroundColor,
+    this.selectedColor,
+    this.animationDuration = const Duration(milliseconds: 250),
   });
 
-  /// List of button labels/children.
   final List<ExpressiveButtonGroupItem> buttons;
   final Axis direction;
-  final double spacing;
-  final double borderRadius;
   final int? selectedIndex;
   final ValueChanged<int>? onSelected;
+  final double height;
+  final Color? backgroundColor;
+  final Color? selectedColor;
+  final Duration animationDuration;
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final children = <Widget>[];
+    final bgColor = backgroundColor ?? scheme.surfaceContainerHigh;
+    final selColor = selectedColor ?? scheme.primaryContainer;
 
-    for (int i = 0; i < buttons.length; i++) {
-      final isFirst = i == 0;
-      final isLast = i == buttons.length - 1;
-      final isSelected = selectedIndex == i;
+    return Container(
+      height: height,
+      decoration: ShapeDecoration(color: bgColor, shape: const StadiumBorder()),
+      clipBehavior: Clip.antiAlias,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: List.generate(buttons.length, (i) {
+          final isSelected = selectedIndex == i;
+          final item = buttons[i];
 
-      final radius = BorderRadius.only(
-        topLeft: Radius.circular(isFirst ? borderRadius : 4),
-        bottomLeft: Radius.circular(isFirst ? borderRadius : 4),
-        topRight: Radius.circular(isLast ? borderRadius : 4),
-        bottomRight: Radius.circular(isLast ? borderRadius : 4),
-      );
-
-      final item = buttons[i];
-      children.add(
-        Expanded(
-          child: Material(
-            color: isSelected
-                ? scheme.secondaryContainer
-                : scheme.surfaceContainerHigh,
-            shape: RoundedRectangleBorder(borderRadius: radius),
-            clipBehavior: Clip.antiAlias,
-            child: InkWell(
-              onTap: () => onSelected?.call(i),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (item.icon != null) ...[
-                      Icon(
-                        item.icon,
-                        size: 18,
-                        color: isSelected
-                            ? scheme.onSecondaryContainer
-                            : scheme.onSurfaceVariant,
-                      ),
-                      const SizedBox(width: 8),
-                    ],
-                    Text(
-                      item.label,
-                      style: TextStyle(
-                        color: isSelected
-                            ? scheme.onSecondaryContainer
-                            : scheme.onSurfaceVariant,
-                        fontWeight: isSelected
-                            ? FontWeight.w600
-                            : FontWeight.w500,
-                      ),
+          return GestureDetector(
+            onTap: () => onSelected?.call(i),
+            child: AnimatedContainer(
+              duration: animationDuration,
+              curve: Curves.easeOut,
+              padding: EdgeInsets.symmetric(
+                horizontal: isSelected ? 20 : 16,
+                vertical: 4,
+              ),
+              decoration: isSelected
+                  ? ShapeDecoration(
+                      color: selColor,
+                      shape: const StadiumBorder(),
+                    )
+                  : null,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (item.icon != null) ...[
+                    Icon(
+                      item.icon,
+                      size: 18,
+                      color: isSelected
+                          ? scheme.onPrimaryContainer
+                          : scheme.onSurfaceVariant,
                     ),
+                    const SizedBox(width: 6),
                   ],
-                ),
+                  Text(
+                    item.label,
+                    style: TextStyle(
+                      color: isSelected
+                          ? scheme.onPrimaryContainer
+                          : scheme.onSurfaceVariant,
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.w500,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-        ),
-      );
-
-      if (spacing > 0 && !isLast) {
-        children.add(
-          SizedBox(
-            width: direction == Axis.horizontal ? spacing : 0,
-            height: direction == Axis.vertical ? spacing : 0,
-          ),
-        );
-      }
-    }
-
-    return direction == Axis.horizontal
-        ? Row(mainAxisSize: MainAxisSize.min, children: children)
-        : Column(mainAxisSize: MainAxisSize.min, children: children);
+          );
+        }),
+      ),
+    );
   }
 }
 

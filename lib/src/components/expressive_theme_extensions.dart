@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../tokens/shape_tokens.dart';
+import 'expressive_input_themes.dart';
 
 /// Expressive ThemeData extensions for M3 Expressive component styles.
 ///
@@ -117,12 +118,15 @@ class ExpressiveComponentThemes {
     bool coloredAppBar = false,
   }) {
     final scheme = base.colorScheme;
-    return base.copyWith(
+    var themed = base.copyWith(
       floatingActionButtonTheme: expressiveFab(scheme: scheme),
       navigationBarTheme: expressiveNavBar(scheme: scheme),
       appBarTheme: expressiveAppBar(scheme: scheme, colored: coloredAppBar),
       iconButtonTheme: expressiveIconButton(scheme: scheme),
       cardTheme: expressiveCarouselCard(scheme: scheme),
     );
+    // Also apply input themes
+    themed = ExpressiveInputThemes.applyAll(themed);
+    return themed;
   }
 }

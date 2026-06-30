@@ -1,5 +1,47 @@
 import 'package:flutter/material.dart';
 
+/// Builds a smooth closed path through points using Catmull-Rom spline.
+Path _smoothPath(List<Offset> points, Size size) {
+  final scaled = points
+      .map((p) => Offset(p.dx * size.width, p.dy * size.height))
+      .toList();
+  return _smoothPathFromScaled(scaled);
+}
+
+/// Builds a smooth closed path from already-scaled points.
+Path _smoothPathFromScaled(List<Offset> pts) {
+  if (pts.length < 3) {
+    final path = Path()..moveTo(pts[0].dx, pts[0].dy);
+    for (int i = 1; i < pts.length; i++) {
+      path.lineTo(pts[i].dx, pts[i].dy);
+    }
+    path.close();
+    return path;
+  }
+
+  final path = Path();
+  final n = pts.length;
+
+  // Catmull-Rom to cubic bezier conversion
+  path.moveTo(pts[0].dx, pts[0].dy);
+  for (int i = 0; i < n; i++) {
+    final p0 = pts[(i - 1 + n) % n];
+    final p1 = pts[i];
+    final p2 = pts[(i + 1) % n];
+    final p3 = pts[(i + 2) % n];
+
+    // Control points from Catmull-Rom
+    final cp1x = p1.dx + (p2.dx - p0.dx) / 6;
+    final cp1y = p1.dy + (p2.dy - p0.dy) / 6;
+    final cp2x = p2.dx - (p3.dx - p1.dx) / 6;
+    final cp2y = p2.dy - (p3.dy - p1.dy) / 6;
+
+    path.cubicTo(cp1x, cp1y, cp2x, cp2y, p2.dx, p2.dy);
+  }
+  path.close();
+  return path;
+}
+
 /// Interpolates between two shape point lists.
 List<Offset> lerpShapePoints(List<Offset> a, List<Offset> b, double t) {
   // Ensure same length by resampling
@@ -126,13 +168,7 @@ class _ShapePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (points.isEmpty) return;
-    final path = Path();
-    path.moveTo(points[0].dx * size.width, points[0].dy * size.height);
-    for (int i = 1; i < points.length; i++) {
-      path.lineTo(points[i].dx * size.width, points[i].dy * size.height);
-    }
-    path.close();
-
+    final path = _smoothPath(points, size);
     canvas.drawPath(path, Paint()..color = color);
 
     if (border != null && border!.style != BorderStyle.none) {
@@ -175,19 +211,16 @@ class MorphableShapeBorder extends OutlinedBorder {
 
   Path _buildPath(Rect rect) {
     if (points.isEmpty) return Path()..addRect(rect);
-    final path = Path();
-    path.moveTo(
-      rect.left + points[0].dx * rect.width,
-      rect.top + points[0].dy * rect.height,
-    );
-    for (int i = 1; i < points.length; i++) {
-      path.lineTo(
-        rect.left + points[i].dx * rect.width,
-        rect.top + points[i].dy * rect.height,
-      );
-    }
-    path.close();
-    return path;
+    // Scale points to rect
+    final scaled = points
+        .map(
+          (p) => Offset(
+            rect.left + p.dx * rect.width,
+            rect.top + p.dy * rect.height,
+          ),
+        )
+        .toList();
+    return _smoothPathFromScaled(scaled);
   }
 
   @override

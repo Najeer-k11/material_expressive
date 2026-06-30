@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
 
-/// A floating toolbar (M3 Expressive).
+/// A floating toolbar with circular icon buttons in a pill container.
 ///
-/// Appears as a pill-shaped floating bar with action icons,
-/// typically anchored at the bottom of the screen.
+/// Matches the M3 Expressive toolbar pattern: icons sit in circles,
+/// the selected/primary action gets an accent background.
 class ExpressiveFloatingToolbar extends StatelessWidget {
   const ExpressiveFloatingToolbar({
     super.key,
     required this.items,
     this.elevation = 6,
     this.backgroundColor,
-    this.borderRadius = 28,
-    this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
   });
 
   final List<FloatingToolbarItem> items;
   final double elevation;
   final Color? backgroundColor;
-  final double borderRadius;
   final EdgeInsetsGeometry padding;
 
   @override
@@ -28,7 +26,7 @@ class ExpressiveFloatingToolbar extends StatelessWidget {
     return Material(
       elevation: elevation,
       color: bgColor,
-      borderRadius: BorderRadius.circular(borderRadius),
+      shape: const StadiumBorder(),
       clipBehavior: Clip.antiAlias,
       child: Padding(
         padding: padding,
@@ -47,16 +45,49 @@ class ExpressiveFloatingToolbar extends StatelessWidget {
                 ),
               );
             }
-            return IconButton(
-              onPressed: item.onPressed,
-              icon: Icon(item.icon),
-              tooltip: item.tooltip,
-              color: item.isSelected ? scheme.primary : scheme.onSurfaceVariant,
-              style: item.isSelected
-                  ? IconButton.styleFrom(
-                      backgroundColor: scheme.primaryContainer,
-                    )
-                  : null,
+
+            // Primary/accent item gets larger colored circle
+            if (item.isPrimary) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: Material(
+                  color: scheme.primary,
+                  shape: const CircleBorder(),
+                  child: InkWell(
+                    onTap: item.onPressed,
+                    customBorder: const CircleBorder(),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Icon(item.icon, size: 24, color: scheme.onPrimary),
+                    ),
+                  ),
+                ),
+              );
+            }
+
+            // Standard item — icon in subtle circle
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2),
+              child: Material(
+                color: item.isSelected
+                    ? scheme.secondaryContainer
+                    : Colors.transparent,
+                shape: const CircleBorder(),
+                child: InkWell(
+                  onTap: item.onPressed,
+                  customBorder: const CircleBorder(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Icon(
+                      item.icon,
+                      size: 22,
+                      color: item.isSelected
+                          ? scheme.onSecondaryContainer
+                          : scheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ),
             );
           }).toList(),
         ),
@@ -72,6 +103,7 @@ class FloatingToolbarItem {
     this.onPressed,
     this.tooltip,
     this.isSelected = false,
+    this.isPrimary = false,
   });
 
   /// Creates a divider between toolbar items.
@@ -79,12 +111,17 @@ class FloatingToolbarItem {
     : icon = Icons.remove,
       onPressed = null,
       tooltip = null,
-      isSelected = false;
+      isSelected = false,
+      isPrimary = false;
 
   final IconData icon;
   final VoidCallback? onPressed;
   final String? tooltip;
   final bool isSelected;
 
-  bool get isDivider => onPressed == null && tooltip == null && !isSelected;
+  /// Primary action (gets accent-colored larger circle).
+  final bool isPrimary;
+
+  bool get isDivider =>
+      onPressed == null && tooltip == null && !isSelected && !isPrimary;
 }

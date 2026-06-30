@@ -84,7 +84,7 @@ class ExpressiveIcon extends StatelessWidget {
       shapeBorder = MorphableShapeBorder(points: shape!);
     } else {
       final tokens = ExpressiveShapeTokens(type: shapeType);
-      shapeBorder = tokens.shape(_containerSize / 2.5);
+      shapeBorder = tokens.shape(_containerSize * 0.45);
     }
 
     Widget child = Icon(icon, size: _iconSize, color: fgColor);
