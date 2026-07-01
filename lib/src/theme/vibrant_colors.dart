@@ -75,18 +75,20 @@ class VibrantColorScheme {
     return diff;
   }
 
-  /// Boost saturation, and for dark mode also bump lightness slightly
-  /// to prevent colors from looking muddy.
+  /// Boost saturation. In dark mode, keep lightness in a controlled range
+  /// so colors stay vibrant but dark (not washed out to light).
   static Color _boost(Color color, double boost, bool isDark) {
     final hsl = HSLColor.fromColor(color);
-    var newSat = (hsl.saturation + boost).clamp(0.0, 1.0);
-    var newLight = hsl.lightness;
+    final newSat = (hsl.saturation + boost).clamp(0.0, 1.0);
 
+    double newLight;
     if (isDark) {
-      // In dark mode, push lightness up slightly to keep vibrancy
-      newLight = (newLight + boost * 0.15).clamp(0.0, 1.0);
-      // Also ensure minimum saturation in dark mode
-      newSat = newSat.clamp(0.3, 1.0);
+      // Dark mode: clamp lightness to 0.25–0.55 range
+      // High saturation in this range = vivid but dark
+      newLight = hsl.lightness.clamp(0.25, 0.55);
+    } else {
+      // Light mode: clamp to 0.3–0.75 to prevent too light or too dark
+      newLight = hsl.lightness.clamp(0.3, 0.75);
     }
 
     return hsl.withSaturation(newSat).withLightness(newLight).toColor();

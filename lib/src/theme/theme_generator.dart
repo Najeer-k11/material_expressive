@@ -50,7 +50,7 @@ class ExpressiveTheme {
         VibrantColorScheme.fromSeed(
           seedColor: seedColor,
           brightness: Brightness.dark,
-          saturationBoost: vibrantDarkMode ? vibrancy * 1.5 : vibrancy * 0.5,
+          saturationBoost: vibrantDarkMode ? vibrancy * 0.8 : vibrancy * 0.3,
         );
 
     final resolvedRadius = radius ?? ExpressiveRadiusTokens.standard;

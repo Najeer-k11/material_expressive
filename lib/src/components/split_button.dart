@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
-/// A split button — primary action + dropdown trigger (M3 Expressive).
+/// M3 Expressive split button.
 ///
-/// Renders as two connected sections: main action and a trailing
-/// icon button for secondary options.
+/// A single pill-shaped container with two sections:
+/// - Left: main action with icon + label (rounded left)
+/// - Right: dropdown trigger with chevron (rounded right)
+/// - A 1px divider separates them inside the shared container
+/// - Both share the same background color for a unified look
 class ExpressiveSplitButton extends StatelessWidget {
   const ExpressiveSplitButton({
     super.key,
@@ -12,7 +15,10 @@ class ExpressiveSplitButton extends StatelessWidget {
     required this.onDropdown,
     this.icon,
     this.dropdownIcon = Icons.arrow_drop_down,
-    this.borderRadius = 28,
+    this.cornerRadius = 28,
+    this.backgroundColor,
+    this.foregroundColor,
+    this.height = 48,
   });
 
   final String label;
@@ -20,70 +26,79 @@ class ExpressiveSplitButton extends StatelessWidget {
   final VoidCallback onDropdown;
   final IconData? icon;
   final IconData dropdownIcon;
-  final double borderRadius;
+  final double cornerRadius;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final textStyle = Theme.of(context).textTheme.labelLarge;
+    final bg = backgroundColor ?? scheme.primaryContainer;
+    final fg = foregroundColor ?? scheme.onPrimaryContainer;
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Primary action
-        Material(
-          color: scheme.primary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(borderRadius),
-              bottomLeft: Radius.circular(borderRadius),
-              topRight: const Radius.circular(4),
-              bottomRight: const Radius.circular(4),
-            ),
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: onPressed,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (icon != null) ...[
-                    Icon(icon, size: 18, color: scheme.onPrimary),
-                    const SizedBox(width: 8),
-                  ],
-                  Text(
-                    label,
-                    style: textStyle?.copyWith(color: scheme.onPrimary),
+    return SizedBox(
+      height: height,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(cornerRadius),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Main action — left side
+            Material(
+              color: bg,
+              borderRadius: BorderRadius.horizontal(
+                left: Radius.circular(cornerRadius),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: InkWell(
+                onTap: onPressed,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (icon != null) ...[
+                        Icon(icon, size: 20, color: fg),
+                        const SizedBox(width: 8),
+                      ],
+                      Text(
+                        label,
+                        style: TextStyle(
+                          color: fg,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
-        const SizedBox(width: 1),
-        // Dropdown trigger
-        Material(
-          color: scheme.primary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              topLeft: const Radius.circular(4),
-              bottomLeft: const Radius.circular(4),
-              topRight: Radius.circular(borderRadius),
-              bottomRight: Radius.circular(borderRadius),
+            // 1px divider
+            Container(
+              width: 1,
+              height: height * 0.55,
+              color: fg.withValues(alpha: 0.25),
             ),
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: onDropdown,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-              child: Icon(dropdownIcon, color: scheme.onPrimary),
+            // Dropdown — right side
+            Material(
+              color: bg,
+              borderRadius: BorderRadius.horizontal(
+                right: Radius.circular(cornerRadius),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: InkWell(
+                onTap: onDropdown,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  child: Icon(dropdownIcon, size: 22, color: fg),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

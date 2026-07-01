@@ -1,28 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:material_expressive/material_expressive.dart';
+import 'pages/colors_page.dart';
+import 'pages/shapes_page.dart';
+import 'pages/motion_page.dart';
+import 'pages/components_page.dart';
+import 'pages/inputs_page.dart';
+import 'pages/typography_page.dart';
 
 void main() {
-  runApp(const ExpressiveExampleApp());
+  runApp(const MaterialExpressiveDemoApp());
 }
 
-class ExpressiveExampleApp extends StatefulWidget {
-  const ExpressiveExampleApp({super.key});
+class MaterialExpressiveDemoApp extends StatefulWidget {
+  const MaterialExpressiveDemoApp({super.key});
 
   @override
-  State<ExpressiveExampleApp> createState() => _ExpressiveExampleAppState();
+  State<MaterialExpressiveDemoApp> createState() =>
+      _MaterialExpressiveDemoAppState();
 }
 
-class _ExpressiveExampleAppState extends State<ExpressiveExampleApp> {
-  Color _seedColor = Colors.deepOrange;
-  var _shapeType = ExpressiveShapeType.organic;
-  var _isDark = false;
+class _MaterialExpressiveDemoAppState extends State<MaterialExpressiveDemoApp> {
+  Color _seed = Colors.deepPurple;
+  var _shape = ExpressiveShapeType.organic;
+  var _dark = false;
+  var _vibrancy = 0.2;
 
   @override
   Widget build(BuildContext context) {
     final theme = ExpressiveTheme.fromSeed(
-      seedColor: _seedColor,
-      shapeType: _shapeType,
-      vibrancy: 0.3,
+      seedColor: _seed,
+      shapeType: _shape,
+      vibrancy: _vibrancy,
+      vibrantDarkMode: true,
     );
 
     return ExpressiveThemeProvider(
@@ -34,45 +43,43 @@ class _ExpressiveExampleAppState extends State<ExpressiveExampleApp> {
         darkTheme: ExpressiveComponentThemes.applyExpressive(
           theme.materialDarkTheme,
         ),
-        themeMode: _isDark ? ThemeMode.dark : ThemeMode.light,
-        home: _HomePage(
-          seedColor: _seedColor,
-          shapeType: _shapeType,
-          onSeedChanged: (c) => setState(() => _seedColor = c),
-          onShapeChanged: (s) => setState(() => _shapeType = s),
-          onToggleDark: () => setState(() => _isDark = !_isDark),
+        themeMode: _dark ? ThemeMode.dark : ThemeMode.light,
+        home: DemoHome(
+          seed: _seed,
+          shape: _shape,
+          dark: _dark,
+          vibrancy: _vibrancy,
+          onSeed: (c) => setState(() => _seed = c),
+          onShape: (s) => setState(() => _shape = s),
+          onDark: () => setState(() => _dark = !_dark),
+          onVibrancy: (v) => setState(() => _vibrancy = v),
         ),
       ),
     );
   }
 }
 
-class _HomePage extends StatefulWidget {
-  const _HomePage({
-    required this.seedColor,
-    required this.shapeType,
-    required this.onSeedChanged,
-    required this.onShapeChanged,
-    required this.onToggleDark,
+class DemoHome extends StatelessWidget {
+  const DemoHome({
+    super.key,
+    required this.seed,
+    required this.shape,
+    required this.dark,
+    required this.vibrancy,
+    required this.onSeed,
+    required this.onShape,
+    required this.onDark,
+    required this.onVibrancy,
   });
 
-  final Color seedColor;
-  final ExpressiveShapeType shapeType;
-  final ValueChanged<Color> onSeedChanged;
-  final ValueChanged<ExpressiveShapeType> onShapeChanged;
-  final VoidCallback onToggleDark;
-
-  @override
-  State<_HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<_HomePage> {
-  var _isMenuOpen = false;
-  var _isLiked = false;
-  var _isPlaying = false;
-  var _selectedButton = 0;
-  var _currentShapeIndex = 0;
-  var _springActive = false;
+  final Color seed;
+  final ExpressiveShapeType shape;
+  final bool dark;
+  final double vibrancy;
+  final ValueChanged<Color> onSeed;
+  final ValueChanged<ExpressiveShapeType> onShape;
+  final VoidCallback onDark;
+  final ValueChanged<double> onVibrancy;
 
   @override
   Widget build(BuildContext context) {
@@ -84,382 +91,131 @@ class _HomePageState extends State<_HomePage> {
         title: const Text('Material Expressive'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.dark_mode),
-            onPressed: widget.onToggleDark,
+            icon: Icon(dark ? Icons.light_mode : Icons.dark_mode),
+            onPressed: onDark,
+            tooltip: 'Toggle dark mode',
           ),
+          const SizedBox(width: 4),
         ],
       ),
       endDrawer: const TokenInspector(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
-      ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
         children: [
-          // -- Seed color --
-          Text('Seed Color', style: theme.textTheme.titleMedium),
+          // Seed color
+          Text('Seed Color', style: theme.textTheme.titleSmall),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children:
-                [
-                      Colors.deepOrange,
-                      Colors.blue,
-                      Colors.teal,
-                      Colors.purple,
-                      Colors.green,
-                      Colors.pink,
-                    ]
-                    .map(
-                      (c) => GestureDetector(
-                        onTap: () => widget.onSeedChanged(c),
-                        child: CircleAvatar(
-                          radius: 20,
-                          backgroundColor: c,
-                          child: widget.seedColor == c
-                              ? const Icon(
-                                  Icons.check,
-                                  color: Colors.white,
-                                  size: 16,
-                                )
-                              : null,
-                        ),
-                      ),
-                    )
-                    .toList(),
+            children: [
+              Colors.deepPurple,
+              Colors.deepOrange,
+              Colors.teal,
+              Colors.pink,
+              Colors.indigo,
+              Colors.green,
+            ].map((c) => _ColorDot(c, seed == c, () => onSeed(c))).toList(),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
 
-          // -- Shape type --
-          Text('Shape Type', style: theme.textTheme.titleMedium),
+          // Vibrancy
+          Text('Vibrancy', style: theme.textTheme.titleSmall),
+          Slider(
+            value: vibrancy,
+            min: 0,
+            max: 0.4,
+            divisions: 8,
+            label: vibrancy.toStringAsFixed(2),
+            onChanged: onVibrancy,
+          ),
+          const SizedBox(height: 12),
+
+          // Shape
+          Text('Shape System', style: theme.textTheme.titleSmall),
           const SizedBox(height: 8),
-          SegmentedButton<ExpressiveShapeType>(
-            segments: const [
-              ButtonSegment(
-                value: ExpressiveShapeType.rounded,
-                label: Text('Rounded'),
-              ),
-              ButtonSegment(
-                value: ExpressiveShapeType.squircle,
-                label: Text('Squircle'),
-              ),
-              ButtonSegment(
-                value: ExpressiveShapeType.organic,
-                label: Text('Organic'),
-              ),
-            ],
-            selected: {widget.shapeType},
-            onSelectionChanged: (s) => widget.onShapeChanged(s.first),
-          ),
-          const SizedBox(height: 32),
-
-          // -- Shape Morphing --
-          Text('Shape Morphing', style: theme.textTheme.titleLarge),
-          const SizedBox(height: 4),
-          Text('Tap to morph between shapes', style: theme.textTheme.bodySmall),
-          const SizedBox(height: 12),
-          Center(
-            child: GestureDetector(
-              onTap: () => setState(() {
-                _currentShapeIndex =
-                    (_currentShapeIndex + 1) % MaterialShapes.allNames.length;
-              }),
-              child: Column(
-                children: [
-                  ShapeMorph(
-                    shape: MaterialShapes.byName(
-                      MaterialShapes.allNames[_currentShapeIndex],
-                    ),
-                    size: 120,
-                    color: scheme.primary,
-                    duration: const Duration(milliseconds: 600),
-                    curve: Curves.easeInOut,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    MaterialShapes.allNames[_currentShapeIndex],
-                    style: theme.textTheme.labelLarge,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          // Static shape grid
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children:
-                [
-                      'heart',
-                      'flower',
-                      'clover4Leaf',
-                      'boom',
-                      'sunny',
-                      'gem',
-                      'cookie6Sided',
-                      'diamond',
-                    ]
-                    .map(
-                      (name) => Container(
-                        width: 48,
-                        height: 48,
-                        decoration: ShapeDecoration(
-                          color: scheme.tertiaryContainer,
-                          shape: MorphableShapeBorder(
-                            points: MaterialShapes.byName(name),
-                          ),
-                        ),
-                      ),
-                    )
-                    .toList(),
-          ),
-          const SizedBox(height: 32),
-
-          // -- Spring Physics --
-          Text('Spring Physics', style: theme.textTheme.titleLarge),
-          const SizedBox(height: 12),
-          Center(
-            child: GestureDetector(
-              onTap: () => setState(() => _springActive = !_springActive),
-              child: SpringTransition(
-                isActive: _springActive,
-                spring: MotionScheme.expressive.defaultSpatial,
-                scaleActive: 1.3,
-                scaleInactive: 1.0,
-                child: Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    color: scheme.secondaryContainer,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Center(
-                    child: Text(
-                      _springActive ? '🎉' : '👆',
-                      style: const TextStyle(fontSize: 32),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Center(
-            child: Text(
-              'Tap for spring bounce',
-              style: theme.textTheme.bodySmall,
-            ),
-          ),
-          const SizedBox(height: 32),
-
-          // -- Button Group --
-          Text('Button Group', style: theme.textTheme.titleLarge),
-          const SizedBox(height: 12),
           ExpressiveButtonGroup(
+            selectedIndex: ExpressiveShapeType.values.indexOf(shape),
+            onSelected: (i) => onShape(ExpressiveShapeType.values[i]),
             buttons: const [
-              ExpressiveButtonGroupItem(label: 'Day', icon: Icons.today),
-              ExpressiveButtonGroupItem(label: 'Week', icon: Icons.view_week),
-              ExpressiveButtonGroupItem(
-                label: 'Month',
-                icon: Icons.calendar_month,
-              ),
-            ],
-            selectedIndex: _selectedButton,
-            onSelected: (i) => setState(() => _selectedButton = i),
-          ),
-          const SizedBox(height: 32),
-
-          // -- Split Button --
-          Text('Split Button', style: theme.textTheme.titleLarge),
-          const SizedBox(height: 12),
-          ExpressiveSplitButton(
-            label: 'Save',
-            icon: Icons.save,
-            onPressed: () {},
-            onDropdown: () {},
-          ),
-          const SizedBox(height: 32),
-
-          // -- Floating Toolbar --
-          Text('Floating Toolbar', style: theme.textTheme.titleLarge),
-          const SizedBox(height: 12),
-          Center(
-            child: ExpressiveFloatingToolbar(
-              items: [
-                FloatingToolbarItem(
-                  icon: Icons.format_bold,
-                  isSelected: true,
-                  onPressed: () {},
-                ),
-                FloatingToolbarItem(
-                  icon: Icons.format_italic,
-                  onPressed: () {},
-                ),
-                FloatingToolbarItem(
-                  icon: Icons.format_underline,
-                  onPressed: () {},
-                ),
-                const FloatingToolbarItem.divider(),
-                FloatingToolbarItem(icon: Icons.link, onPressed: () {}),
-                FloatingToolbarItem(icon: Icons.image, onPressed: () {}),
-              ],
-            ),
-          ),
-          const SizedBox(height: 32),
-
-          // -- Loading Indicators --
-          Text('Loading Indicators', style: theme.textTheme.titleLarge),
-          const SizedBox(height: 12),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Column(
-                children: [
-                  ContainedLoadingIndicator(segments: 4),
-                  SizedBox(height: 8),
-                  Text('Contained'),
-                ],
-              ),
-              Column(
-                children: [
-                  OrganicLoadingIndicator(),
-                  SizedBox(height: 8),
-                  Text('Organic'),
-                ],
-              ),
-              Column(
-                children: [
-                  PulsingDotsIndicator(),
-                  SizedBox(height: 8),
-                  Text('Pulsing'),
-                ],
-              ),
-              Column(
-                children: [
-                  MorphingShapeIndicator(),
-                  SizedBox(height: 8),
-                  Text('Morphing'),
-                ],
-              ),
+              ExpressiveButtonGroupItem(label: 'Rounded'),
+              ExpressiveButtonGroupItem(label: 'Squircle'),
+              ExpressiveButtonGroupItem(label: 'Organic'),
+              ExpressiveButtonGroupItem(label: 'Full'),
             ],
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 28),
 
-          // -- Animated Icons --
-          Text('Animated Icons', style: theme.textTheme.titleLarge),
+          // Feature pages
+          Text('Explore', style: theme.textTheme.titleMedium),
           const SizedBox(height: 12),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    children: [
-                      ExpressiveAnimatedIcon(
-                        icon: AnimatedIcons.menu_close,
-                        isActive: _isMenuOpen,
-                        onPressed: () =>
-                            setState(() => _isMenuOpen = !_isMenuOpen),
-                      ),
-                      const Text('Menu'),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      BouncingIcon(
-                        icon: Icons.favorite_border,
-                        activeIcon: Icons.favorite,
-                        isActive: _isLiked,
-                        activeColor: Colors.red,
-                        onPressed: () => setState(() => _isLiked = !_isLiked),
-                      ),
-                      const Text('Like'),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      MorphingIcon(
-                        icon: Icons.play_arrow,
-                        activeIcon: Icons.pause,
-                        isActive: _isPlaying,
-                        onPressed: () =>
-                            setState(() => _isPlaying = !_isPlaying),
-                      ),
-                      const Text('Play'),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      HoverIcon(
-                        icon: Icons.settings,
-                        tooltip: 'Settings',
-                        onPressed: () {},
-                      ),
-                      const Text('Hover'),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 32),
-
-          // -- Surfaces --
-          Text('Surfaces', style: theme.textTheme.titleLarge),
-          const SizedBox(height: 12),
-          const Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: [
-              _SurfaceChip('Primary', ExpressiveSurfaceType.primaryTinted),
-              _SurfaceChip('Secondary', ExpressiveSurfaceType.secondaryTinted),
-              _SurfaceChip('Tertiary', ExpressiveSurfaceType.tertiaryTinted),
-              _SurfaceChip('Container', ExpressiveSurfaceType.container),
-              _SurfaceChip('High', ExpressiveSurfaceType.containerHigh),
-            ],
-          ),
-          const SizedBox(height: 32),
-
-          // -- State Layer --
-          Text('State Layer', style: theme.textTheme.titleLarge),
-          const SizedBox(height: 12),
-          ExpressiveStateLayer(
-            onTap: () {},
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Center(
-                  child: Text(
-                    'Press for scale animation',
-                    style: theme.textTheme.bodyLarge,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 80),
+          ..._pages(context, scheme),
+          const SizedBox(height: 16),
         ],
       ),
     );
   }
+
+  List<Widget> _pages(BuildContext ctx, ColorScheme s) {
+    final pages = [
+      (Icons.palette, 'Colors & Theme', const ColorsPage()),
+      (Icons.category, 'Shapes & Morphing', const ShapesPage()),
+      (Icons.animation, 'Motion & Springs', const MotionPage()),
+      (Icons.widgets, 'Components', const ComponentsPage()),
+      (Icons.input, 'Inputs', const InputsPage()),
+      (Icons.text_fields, 'Typography', const TypographyPage()),
+    ];
+
+    return pages.map((p) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: Card(
+          child: ListTile(
+            leading: Icon(p.$1, color: s.primary),
+            title: Text(p.$2),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.push(
+              ctx,
+              ExpressivePageRoute(
+                builder: (_) => p.$3,
+                type: ExpressivePageTransitionType.sharedAxis,
+              ),
+            ),
+          ),
+        ),
+      );
+    }).toList();
+  }
 }
 
-class _SurfaceChip extends StatelessWidget {
-  const _SurfaceChip(this.label, this.type);
-  final String label;
-  final ExpressiveSurfaceType type;
+class _ColorDot extends StatelessWidget {
+  const _ColorDot(this.color, this.selected, this.onTap);
+  final Color color;
+  final bool selected;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return ExpressiveSurface(
-      type: type,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      borderRadius: BorderRadius.circular(12),
-      child: Text(label, style: Theme.of(context).textTheme.labelMedium),
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+          border: selected
+              ? Border.all(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  width: 3,
+                )
+              : null,
+        ),
+        child: selected
+            ? const Icon(Icons.check, color: Colors.white, size: 18)
+            : null,
+      ),
     );
   }
 }
