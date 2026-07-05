@@ -17,16 +17,11 @@ class ExpressiveNavBarTheme {
     List<Offset> unselectedShape = const [],
     double height = 88,
   }) {
-    final selShape = selectedShape.isEmpty
-        ? MaterialShapes.pill
-        : selectedShape;
-
     return NavigationBarThemeData(
       height: height,
       elevation: 0,
       backgroundColor: scheme.surfaceContainer,
       indicatorColor: scheme.secondaryContainer,
-      indicatorShape: const StadiumBorder(),
       iconTheme: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
           return IconThemeData(color: scheme.onSecondaryContainer, size: 24);
