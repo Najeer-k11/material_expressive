@@ -74,7 +74,7 @@ class _GestureSpringBoxState extends State<GestureSpringBox>
       final simulation = widget.spring.simulate(
         start: _dragOffset,
         target: 0,
-        velocity: velocity / 1000,
+        velocity: velocity,
       );
       _ctrl.animateWith(simulation);
     }

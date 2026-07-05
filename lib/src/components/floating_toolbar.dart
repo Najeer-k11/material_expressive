@@ -104,7 +104,7 @@ class FloatingToolbarItem {
     this.tooltip,
     this.isSelected = false,
     this.isPrimary = false,
-  });
+  }) : _isDivider = false;
 
   /// Creates a divider between toolbar items.
   const FloatingToolbarItem.divider()
@@ -112,7 +112,8 @@ class FloatingToolbarItem {
       onPressed = null,
       tooltip = null,
       isSelected = false,
-      isPrimary = false;
+      isPrimary = false,
+      _isDivider = true;
 
   final IconData icon;
   final VoidCallback? onPressed;
@@ -122,6 +123,7 @@ class FloatingToolbarItem {
   /// Primary action (gets accent-colored larger circle).
   final bool isPrimary;
 
-  bool get isDivider =>
-      onPressed == null && tooltip == null && !isSelected && !isPrimary;
+  final bool _isDivider;
+
+  bool get isDivider => _isDivider;
 }

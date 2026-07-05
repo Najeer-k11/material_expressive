@@ -91,6 +91,18 @@ class _ExpressiveFabState extends State<ExpressiveFab>
   }
 
   @override
+  void didUpdateWidget(ExpressiveFab oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.shrinkOnScroll != oldWidget.shrinkOnScroll ||
+        widget.scrollController != oldWidget.scrollController) {
+      oldWidget.scrollController?.removeListener(_onScroll);
+      if (widget.shrinkOnScroll && widget.scrollController != null) {
+        widget.scrollController!.addListener(_onScroll);
+      }
+    }
+  }
+
+  @override
   void dispose() {
     widget.scrollController?.removeListener(_onScroll);
     _pressCtrl.dispose();

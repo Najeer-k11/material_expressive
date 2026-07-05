@@ -6,13 +6,18 @@ This is not a widget library. It's a design system that enhances Flutter's exist
 
 Inspired by Google's M3 Expressive redesign announced at I/O 2025.
 
+<p align="center">
+  <img src="demo/demo-light.gif" width="48%" alt="Light Mode Demo" />
+  <img src="demo/demo-dark.gif" width="48%" alt="Dark Mode Demo" />
+</p>
+
 ---
 
 ## Installation
 
 ```yaml
 dependencies:
-  material_expressive: ^0.3.0
+  material_expressive: ^0.7.0
 ```
 
 ```dart

@@ -51,10 +51,12 @@ class ExpressiveSurface extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final resolvedRadius = borderRadius ?? BorderRadius.circular(16);
+    final textDirection = Directionality.maybeOf(context);
+    final resolvedBorderRadius = resolvedRadius.resolve(textDirection);
     return Material(
       color: _resolveColor(scheme),
       elevation: elevation,
-      borderRadius: resolvedRadius as BorderRadius?,
+      borderRadius: resolvedBorderRadius,
       clipBehavior: Clip.antiAlias,
       child: padding != null ? Padding(padding: padding!, child: child) : child,
     );

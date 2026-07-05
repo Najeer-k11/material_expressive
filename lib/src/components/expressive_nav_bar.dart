@@ -26,7 +26,7 @@ class ExpressiveNavBarTheme {
       elevation: 0,
       backgroundColor: scheme.surfaceContainer,
       indicatorColor: scheme.secondaryContainer,
-      indicatorShape: MorphableShapeBorder(points: selShape),
+      indicatorShape: const StadiumBorder(),
       iconTheme: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
           return IconThemeData(color: scheme.onSecondaryContainer, size: 24);

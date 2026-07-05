@@ -5,11 +5,11 @@ Path _smoothPath(List<Offset> points, Size size) {
   final scaled = points
       .map((p) => Offset(p.dx * size.width, p.dy * size.height))
       .toList();
-  return _smoothPathFromScaled(scaled);
+  return smoothPathFromScaled(scaled);
 }
 
 /// Builds a smooth closed path from already-scaled points.
-Path _smoothPathFromScaled(List<Offset> pts) {
+Path smoothPathFromScaled(List<Offset> pts) {
   if (pts.length < 3) {
     final path = Path()..moveTo(pts[0].dx, pts[0].dy);
     for (int i = 1; i < pts.length; i++) {
@@ -52,6 +52,7 @@ List<Offset> lerpShapePoints(List<Offset> a, List<Offset> b, double t) {
 }
 
 List<Offset> _resample(List<Offset> points, int count) {
+  if (points.isEmpty) return List.filled(count, Offset.zero);
   if (points.length == count) return points;
   final result = <Offset>[];
   for (int i = 0; i < count; i++) {
@@ -220,7 +221,7 @@ class MorphableShapeBorder extends OutlinedBorder {
           ),
         )
         .toList();
-    return _smoothPathFromScaled(scaled);
+    return smoothPathFromScaled(scaled);
   }
 
   @override

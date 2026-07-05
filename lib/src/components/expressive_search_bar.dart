@@ -96,6 +96,7 @@ class _ExpressiveSearchBarState extends State<ExpressiveSearchBar> {
                     focusNode: _focusNode,
                     onChanged: widget.onChanged,
                     onSubmitted: widget.onSubmitted,
+                    autofocus: widget.autoFocus,
                     decoration: InputDecoration(
                       hintText: widget.hintText,
                       border: InputBorder.none,

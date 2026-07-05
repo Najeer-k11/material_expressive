@@ -128,7 +128,8 @@ class _SegmentedArcPainter extends CustomPainter {
     for (int i = 0; i < segments; i++) {
       final segStart = i / segments;
       final segEnd = (i + 1) / segments;
-      final localProgress = ((progress * 2 - segStart) / (segEnd - segStart))
+      final double cycleValue = math.sin(progress * math.pi);
+      final localProgress = ((cycleValue - segStart) / (segEnd - segStart))
           .clamp(0.0, 1.0);
 
       if (localProgress > 0) {

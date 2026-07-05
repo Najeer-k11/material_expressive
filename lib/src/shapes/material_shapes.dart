@@ -7,7 +7,6 @@ import 'package:flutter/painting.dart';
 /// that can be interpolated for shape morphing.
 class MaterialShapes {
   MaterialShapes._(); 
-
   static List<Offset> get circle => _polygon(32, 0);
   static List<Offset> get square => _roundedRect(0.15);
   static List<Offset> get pill => _pill();

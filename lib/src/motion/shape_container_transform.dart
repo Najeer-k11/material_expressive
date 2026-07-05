@@ -103,14 +103,11 @@ class _ShapeClipper extends CustomClipper<Path> {
 
   @override
   Path getClip(Size size) {
-    final path = Path();
-    if (points.isEmpty) return path..addRect(Offset.zero & size);
-    path.moveTo(points[0].dx * size.width, points[0].dy * size.height);
-    for (int i = 1; i < points.length; i++) {
-      path.lineTo(points[i].dx * size.width, points[i].dy * size.height);
-    }
-    path.close();
-    return path;
+    if (points.isEmpty) return Path()..addRect(Offset.zero & size);
+    final scaled = points
+        .map((p) => Offset(p.dx * size.width, p.dy * size.height))
+        .toList();
+    return smoothPathFromScaled(scaled);
   }
 
   @override

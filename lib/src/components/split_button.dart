@@ -43,6 +43,7 @@ class ExpressiveSplitButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(cornerRadius),
         child: Row(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Main action — left side
             Material(

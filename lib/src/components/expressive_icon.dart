@@ -89,7 +89,22 @@ class ExpressiveIcon extends StatelessWidget {
 
     Widget child = Icon(icon, size: _iconSize, color: fgColor);
 
-    if (filled) {
+    if (onPressed != null) {
+      child = Material(
+        color: filled ? bgColor : Colors.transparent,
+        shape: shapeBorder,
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onPressed,
+          customBorder: shapeBorder,
+          child: SizedBox(
+            width: _containerSize,
+            height: _containerSize,
+            child: Center(child: child),
+          ),
+        ),
+      );
+    } else if (filled) {
       child = Material(
         color: bgColor,
         shape: shapeBorder,
@@ -99,14 +114,6 @@ class ExpressiveIcon extends StatelessWidget {
           height: _containerSize,
           child: Center(child: child),
         ),
-      );
-    }
-
-    if (onPressed != null) {
-      child = InkWell(
-        onTap: onPressed,
-        customBorder: shapeBorder,
-        child: child,
       );
     }
 
