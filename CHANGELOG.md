@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.7.0
+
+### New Components
+
+- `NavigationBar` → pill-shaped selection indicator with morphing (morphs between destinations on tap)
+- `ExpressiveBottomNavigationBar` — fully custom bottom nav with pill container for selection
+- Scroll-aware `ExpressiveNavigationBar` — shrinks when scrolling down, expands when scrolling up
+- Pill-shaped selection indicator now morphs smoothly between destinations
+- Added `_expressive.navBar.indicator.container.cornerFamily` token for pill curvature control
+
+### Demo App Enhancements
+
+- Main navigation uses new morphing bottom navigation bar
+- Light and dark mode GIFs now show the new morphing navigation bar
+- All pages fully accessible via navigation bar
+- Minor theme tune-ups for better visual balance
+
+### API Additions
+
+- Added `ExpressiveTheme.of(context).navBar` extension for convenient access to nav bar tokens
+- Added `ExpressiveNavBarTokens` class
+
+### Bug Fixes
+
+- Fixed navigation bar pill to correctly morph between all destinations
+- Scroll-aware animation now works smoothly with the morphing indicator
+- Eliminated visual glitches on navigation bar when scrolling
+- Removed `indicatorShape` from `NavigationBar` (now handled by `_expressive.navBar.indicator.container.shape`)
+
 ## 0.6.0
 
 ### Color System
