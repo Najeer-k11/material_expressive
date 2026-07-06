@@ -19,5 +19,4 @@ export 'motion.dart';
 export 'shapes.dart';
 export 'theme.dart';
 export 'components.dart';
-export 'templates.dart';
 export 'devtools.dart';

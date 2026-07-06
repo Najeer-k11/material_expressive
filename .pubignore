@@ -1,2 +1,3 @@
 # Exclude heavy demo assets from the published package
-demo/
+./demo-dark.gif
+./demo-light.gif

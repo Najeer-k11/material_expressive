@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.8.0
+
+### Demo App Enhancements
+
+- **Floating Action Button (FAB) Demo**
+  - Tap the floating button to cycle through 5 different cards
+  - Each card has a unique expressive design with varying colors and content
+  - Built using `GestureSpringBox` for smooth interactive animations
+  - Fully responsive and adapts to different screen sizes
+
+- **Card Carousel Improvements**
+  - Enhanced card animations and transitions
+  - Better peek/snap behavior with more natural easing
+  - Improved indicator dot scaling and responsiveness
+
+### Bug Fixes
+
+- Fixed carousel indicator dots to properly handle infinite looping wrap-around
+- Improved carousel page switching with better edge case handling
+- Resolved minor layout glitches in demo app
+
 ## 0.7.0
 
 ### New Components

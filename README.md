@@ -7,8 +7,9 @@ This is not a widget library. It's a design system that enhances Flutter's exist
 Inspired by Google's M3 Expressive redesign announced at I/O 2025.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Najeer-k11/material_expressive/main/demo/demo-light.gif" width="48%" alt="Light Mode Demo" />
-  <img src="https://raw.githubusercontent.com/Najeer-k11/material_expressive/main/demo/demo-dark.gif" width="48%" alt="Dark Mode Demo" />
+  <a href="https://github.com/Najeer-k11/material_expressive">
+    <img src="demo/widget_demo.svg" width="80%" alt="Material Expressive Widget Demo" />
+  </a>
 </p>
 
 ---
@@ -17,7 +18,7 @@ Inspired by Google's M3 Expressive redesign announced at I/O 2025.
 
 ```yaml
 dependencies:
-  material_expressive: ^0.7.0
+  material_expressive: ^0.8.0
 ```
 
 ```dart
