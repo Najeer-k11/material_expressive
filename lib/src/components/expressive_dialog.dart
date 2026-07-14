@@ -86,11 +86,12 @@ class ExpressiveAlertDialog extends StatelessWidget {
             if (actions.isNotEmpty)
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children:
-                    actions
-                        .expand((a) => [a, const SizedBox(width: 8)])
-                        .toList()
-                      ..removeLast(),
+                children: [
+                  for (int i = 0; i < actions.length; i++) ...[
+                    actions[i],
+                    if (i < actions.length - 1) const SizedBox(width: 8),
+                  ],
+                ],
               ),
           ],
         ),

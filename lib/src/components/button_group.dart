@@ -64,45 +64,52 @@ class ExpressiveButtonGroup extends StatelessWidget {
             final item = buttons[i];
             final br = _radius(i, isSelected);
       
-          return GestureDetector(
-            onTap: () => onSelected?.call(i),
-            child: AnimatedContainer(
-              duration: animationDuration,
-              curve: Curves.easeOut,
-              decoration: BoxDecoration(
-                color: isSelected ? selColor : bgColor,
-                borderRadius: br,
-              ),
-              padding: EdgeInsets.symmetric(
-                horizontal: isSelected ? 20 : 16,
-                vertical: 0,
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (item.icon != null) ...[
-                    Icon(
-                      item.icon,
-                      size: 17,
-                      color: isSelected
-                          ? scheme.onPrimaryContainer
-                          : scheme.onSurfaceVariant,
-                    ),
-                    const SizedBox(width: 6),
-                  ],
-                  Text(
-                    item.label,
-                    style: TextStyle(
-                      color: isSelected
-                          ? scheme.onPrimaryContainer
-                          : scheme.onSurfaceVariant,
-                      fontWeight: isSelected
-                          ? FontWeight.w600
-                          : FontWeight.w500,
-                      fontSize: 14,
-                    ),
+          return Semantics(
+            selected: isSelected,
+            label: item.label,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => onSelected?.call(i),
+                child: AnimatedContainer(
+                  duration: animationDuration,
+                  curve: Curves.easeOut,
+                  decoration: BoxDecoration(
+                    color: isSelected ? selColor : bgColor,
+                    borderRadius: br,
                   ),
-                ],
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isSelected ? 20 : 16,
+                    vertical: 0,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (item.icon != null) ...[
+                        Icon(
+                          item.icon,
+                          size: 17,
+                          color: isSelected
+                              ? scheme.onPrimaryContainer
+                              : scheme.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: 6),
+                      ],
+                      Text(
+                        item.label,
+                        style: TextStyle(
+                          color: isSelected
+                              ? scheme.onPrimaryContainer
+                              : scheme.onSurfaceVariant,
+                          fontWeight: isSelected
+                              ? FontWeight.w600
+                              : FontWeight.w500,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           );

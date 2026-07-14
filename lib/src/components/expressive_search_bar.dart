@@ -88,7 +88,14 @@ class _ExpressiveSearchBarState extends State<ExpressiveSearchBar> {
                   padding: const EdgeInsets.only(left: 16),
                   child:
                       widget.leading ??
-                      Icon(Icons.search, color: scheme.onSurfaceVariant),
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 200),
+                        child: Icon(
+                          Icons.search,
+                          key: const ValueKey('search-expanded'),
+                          color: scheme.onSurfaceVariant,
+                        ),
+                      ),
                 ),
                 Expanded(
                   child: TextField(

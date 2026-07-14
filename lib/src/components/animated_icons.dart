@@ -33,6 +33,7 @@ class ExpressiveAnimatedIcon extends StatefulWidget {
 class _ExpressiveAnimatedIconState extends State<ExpressiveAnimatedIcon>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
+  late CurvedAnimation _curvedAnimation;
 
   @override
   void initState() {
@@ -42,11 +43,16 @@ class _ExpressiveAnimatedIconState extends State<ExpressiveAnimatedIcon>
       duration: widget.duration,
       value: widget.isActive ? 1.0 : 0.0,
     );
+    _curvedAnimation = CurvedAnimation(parent: _ctrl, curve: widget.curve);
   }
 
   @override
   void didUpdateWidget(ExpressiveAnimatedIcon old) {
     super.didUpdateWidget(old);
+    if (widget.curve != old.curve) {
+      _curvedAnimation.dispose();
+      _curvedAnimation = CurvedAnimation(parent: _ctrl, curve: widget.curve);
+    }
     if (widget.isActive != old.isActive) {
       widget.isActive ? _ctrl.forward() : _ctrl.reverse();
     }
@@ -54,6 +60,7 @@ class _ExpressiveAnimatedIconState extends State<ExpressiveAnimatedIcon>
 
   @override
   void dispose() {
+    _curvedAnimation.dispose();
     _ctrl.dispose();
     super.dispose();
   }
@@ -67,7 +74,7 @@ class _ExpressiveAnimatedIconState extends State<ExpressiveAnimatedIcon>
         animation: _ctrl,
         builder: (context, _) => AnimatedIcon(
           icon: widget.icon,
-          progress: CurvedAnimation(parent: _ctrl, curve: widget.curve),
+          progress: _curvedAnimation,
           size: widget.size,
           color: Color.lerp(color, widget.activeColor ?? color, _ctrl.value),
           semanticLabel: widget.semanticLabel,
@@ -399,16 +406,20 @@ class _SelectionIconState extends State<SelectionIcon>
     final scheme = Theme.of(context).colorScheme;
     final selColor = widget.color ?? scheme.primary;
     final unselColor = widget.unselectedColor ?? scheme.onSurfaceVariant;
-    return GestureDetector(
-      onTap: () => widget.onChanged?.call(!widget.isSelected),
-      child: AnimatedBuilder(
-        animation: _ctrl,
-        builder: (context, _) => Transform.scale(
-          scale: _scale.value,
-          child: Icon(
-            widget.isSelected ? widget.icon : widget.unselectedIcon,
-            size: widget.size,
-            color: Color.lerp(unselColor, selColor, _ctrl.value),
+    return Semantics(
+      checked: widget.isSelected,
+      label: widget.isSelected ? 'Selected' : 'Not selected',
+      child: GestureDetector(
+        onTap: () => widget.onChanged?.call(!widget.isSelected),
+        child: AnimatedBuilder(
+          animation: _ctrl,
+          builder: (context, _) => Transform.scale(
+            scale: _scale.value,
+            child: Icon(
+              widget.isSelected ? widget.icon : widget.unselectedIcon,
+              size: widget.size,
+              color: Color.lerp(unselColor, selColor, _ctrl.value),
+            ),
           ),
         ),
       ),

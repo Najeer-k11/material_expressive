@@ -349,7 +349,9 @@ class _ExpressiveCarouselState extends State<ExpressiveCarousel> {
 
                   return GestureDetector(
                     onTap: () => _onIndicatorTapped(index),
-                    child: Container(
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 150),
+                      curve: Curves.easeOut,
                       margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
                       width: width,
                       height: height,

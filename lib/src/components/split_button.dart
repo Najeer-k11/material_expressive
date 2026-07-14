@@ -77,10 +77,12 @@ class ExpressiveSplitButton extends StatelessWidget {
               ),
             ),
             // 1px divider
-            Container(
-              width: 1,
-              height: height * 0.55,
-              color: fg.withValues(alpha: 0.25),
+            Center(
+              child: Container(
+                width: 1,
+                height: height * 0.55,
+                color: fg.withValues(alpha: 0.25),
+              ),
             ),
             // Dropdown — right side
             Material(

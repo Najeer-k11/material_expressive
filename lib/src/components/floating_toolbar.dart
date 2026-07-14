@@ -48,7 +48,7 @@ class ExpressiveFloatingToolbar extends StatelessWidget {
 
             // Primary/accent item gets larger colored circle
             if (item.isPrimary) {
-              return Padding(
+              Widget primary = Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4),
                 child: Material(
                   color: scheme.primary,
@@ -63,10 +63,14 @@ class ExpressiveFloatingToolbar extends StatelessWidget {
                   ),
                 ),
               );
+              if (item.tooltip != null) {
+                primary = Tooltip(message: item.tooltip!, child: primary);
+              }
+              return primary;
             }
 
             // Standard item — icon in subtle circle
-            return Padding(
+            Widget standard = Padding(
               padding: const EdgeInsets.symmetric(horizontal: 2),
               child: Material(
                 color: item.isSelected
@@ -89,6 +93,10 @@ class ExpressiveFloatingToolbar extends StatelessWidget {
                 ),
               ),
             );
+            if (item.tooltip != null) {
+              standard = Tooltip(message: item.tooltip!, child: standard);
+            }
+            return standard;
           }).toList(),
         ),
       ),

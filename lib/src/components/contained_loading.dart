@@ -51,23 +51,25 @@ class _ContainedLoadingState extends State<ContainedLoadingIndicator>
     final bg =
         widget.backgroundColor ??
         Theme.of(context).colorScheme.surfaceContainerHighest;
-    return SizedBox(
-      width: widget.size,
-      height: widget.size,
-      child: AnimatedBuilder(
-        animation: _ctrl,
-        builder: (context, _) {
-          return CustomPaint(
-            painter: _SegmentedArcPainter(
-              progress: _ctrl.value,
-              color: color,
-              backgroundColor: bg,
-              strokeWidth: widget.strokeWidth,
-              segments: widget.segments,
-              gapDegrees: widget.gapDegrees,
-            ),
-          );
-        },
+    return RepaintBoundary(
+      child: SizedBox(
+        width: widget.size,
+        height: widget.size,
+        child: AnimatedBuilder(
+          animation: _ctrl,
+          builder: (context, _) {
+            return CustomPaint(
+              painter: _SegmentedArcPainter(
+                progress: _ctrl.value,
+                color: color,
+                backgroundColor: bg,
+                strokeWidth: widget.strokeWidth,
+                segments: widget.segments,
+                gapDegrees: widget.gapDegrees,
+              ),
+            );
+          },
+        ),
       ),
     );
   }

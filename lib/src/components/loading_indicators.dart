@@ -39,16 +39,18 @@ class _OrganicLoadingState extends State<OrganicLoadingIndicator>
   @override
   Widget build(BuildContext context) {
     final color = widget.color ?? Theme.of(context).colorScheme.primary;
-    return SizedBox(
-      width: widget.size,
-      height: widget.size,
-      child: AnimatedBuilder(
-        animation: _ctrl,
-        builder: (context, _) => CustomPaint(
-          painter: _BlobPainter(
-            progress: _ctrl.value,
-            color: color,
-            count: widget.blobCount,
+    return RepaintBoundary(
+      child: SizedBox(
+        width: widget.size,
+        height: widget.size,
+        child: AnimatedBuilder(
+          animation: _ctrl,
+          builder: (context, _) => CustomPaint(
+            painter: _BlobPainter(
+              progress: _ctrl.value,
+              color: color,
+              count: widget.blobCount,
+            ),
           ),
         ),
       ),
@@ -129,31 +131,33 @@ class _PulsingDotsState extends State<PulsingDotsIndicator>
   Widget build(BuildContext context) {
     final color = widget.color ?? Theme.of(context).colorScheme.primary;
     final dotSize = widget.size / (widget.dotCount * 2 + 1);
-    return SizedBox(
-      width: widget.size,
-      height: dotSize * 2,
-      child: AnimatedBuilder(
-        animation: _ctrl,
-        builder: (context, _) => Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(widget.dotCount, (i) {
-            final phase = (_ctrl.value + i / widget.dotCount) % 1.0;
-            final scale = 0.5 + 0.5 * math.sin(phase * math.pi);
-            return Padding(
-              padding: EdgeInsets.symmetric(horizontal: dotSize * 0.3),
-              child: Transform.scale(
-                scale: scale,
-                child: Container(
-                  width: dotSize,
-                  height: dotSize,
-                  decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.5 + 0.5 * scale),
-                    shape: BoxShape.circle,
+    return RepaintBoundary(
+      child: SizedBox(
+        width: widget.size,
+        height: dotSize * 2,
+        child: AnimatedBuilder(
+          animation: _ctrl,
+          builder: (context, _) => Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(widget.dotCount, (i) {
+              final phase = (_ctrl.value + i / widget.dotCount) % 1.0;
+              final scale = 0.5 + 0.5 * math.sin(phase * math.pi);
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: dotSize * 0.3),
+                child: Transform.scale(
+                  scale: scale,
+                  child: Container(
+                    width: dotSize,
+                    height: dotSize,
+                    decoration: BoxDecoration(
+                      color: color.withValues(alpha: 0.5 + 0.5 * scale),
+                      shape: BoxShape.circle,
+                    ),
                   ),
                 ),
-              ),
-            );
-          }),
+              );
+            }),
+          ),
         ),
       ),
     );
@@ -192,29 +196,31 @@ class _MorphingShapeState extends State<MorphingShapeIndicator>
   @override
   Widget build(BuildContext context) {
     final color = widget.color ?? Theme.of(context).colorScheme.primary;
-    return SizedBox(
-      width: widget.size,
-      height: widget.size,
-      child: AnimatedBuilder(
-        animation: _ctrl,
-        builder: (context, _) {
-          final p = _ctrl.value;
-          final half = widget.size / 2;
-          final r = p < 0.33
-              ? half - (half - 8) * (p / 0.33)
-              : p < 0.66
-              ? 8 + (half * 0.3) * ((p - 0.33) / 0.33)
-              : 8 + half * 0.3 + (half - 8 - half * 0.3) * ((p - 0.66) / 0.34);
-          return Transform.rotate(
-            angle: p * math.pi,
-            child: Container(
-              decoration: BoxDecoration(
-                color: color,
-                borderRadius: BorderRadius.circular(r),
+    return RepaintBoundary(
+      child: SizedBox(
+        width: widget.size,
+        height: widget.size,
+        child: AnimatedBuilder(
+          animation: _ctrl,
+          builder: (context, _) {
+            final p = _ctrl.value;
+            final half = widget.size / 2;
+            final r = p < 0.33
+                ? half - (half - 8) * (p / 0.33)
+                : p < 0.66
+                ? 8 + (half * 0.3) * ((p - 0.33) / 0.33)
+                : 8 + half * 0.3 + (half - 8 - half * 0.3) * ((p - 0.66) / 0.34);
+            return Transform.rotate(
+              angle: p * math.pi,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(r),
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

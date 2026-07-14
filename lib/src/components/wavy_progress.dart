@@ -55,25 +55,27 @@ class _WavyLinearProgressState extends State<WavyLinearProgressIndicator>
     final fgColor = widget.color ?? scheme.primary;
     final bgColor = widget.backgroundColor ?? scheme.surfaceContainerHighest;
 
-    return SizedBox(
-      height: widget.height + widget.waveAmplitude * 2,
-      child: AnimatedBuilder(
-        animation: _ctrl,
-        builder: (context, _) {
-          return CustomPaint(
-            painter: _WavyLinearPainter(
-              progress: widget.value,
-              phase: _ctrl.value * 2 * math.pi,
-              amplitude: widget.waveAmplitude,
-              waveLength: widget.waveLength,
-              foregroundColor: fgColor,
-              backgroundColor: bgColor,
-              strokeWidth: widget.height,
-              borderRadius: widget.borderRadius,
-            ),
-            size: Size.infinite,
-          );
-        },
+    return RepaintBoundary(
+      child: SizedBox(
+        height: widget.height + widget.waveAmplitude * 2,
+        child: AnimatedBuilder(
+          animation: _ctrl,
+          builder: (context, _) {
+            return CustomPaint(
+              painter: _WavyLinearPainter(
+                progress: widget.value,
+                phase: _ctrl.value * 2 * math.pi,
+                amplitude: widget.waveAmplitude,
+                waveLength: widget.waveLength,
+                foregroundColor: fgColor,
+                backgroundColor: bgColor,
+                strokeWidth: widget.height,
+                borderRadius: widget.borderRadius,
+              ),
+              size: Size.infinite,
+            );
+          },
+        ),
       ),
     );
   }
@@ -222,20 +224,22 @@ class _WavyCircularProgressState extends State<WavyCircularProgressIndicator>
     final fgColor = widget.color ?? scheme.primary;
     final bgColor = widget.backgroundColor ?? scheme.surfaceContainerHighest;
 
-    return SizedBox(
-      width: widget.size,
-      height: widget.size,
-      child: AnimatedBuilder(
-        animation: _ctrl,
-        builder: (context, _) => CustomPaint(
-          painter: _WavyCircularPainter(
-            progress: widget.value,
-            phase: _ctrl.value * 2 * math.pi,
-            amplitude: widget.waveAmplitude,
-            waveCycles: widget.waveCycles,
-            foregroundColor: fgColor,
-            backgroundColor: bgColor,
-            strokeWidth: widget.strokeWidth,
+    return RepaintBoundary(
+      child: SizedBox(
+        width: widget.size,
+        height: widget.size,
+        child: AnimatedBuilder(
+          animation: _ctrl,
+          builder: (context, _) => CustomPaint(
+            painter: _WavyCircularPainter(
+              progress: widget.value,
+              phase: _ctrl.value * 2 * math.pi,
+              amplitude: widget.waveAmplitude,
+              waveCycles: widget.waveCycles,
+              foregroundColor: fgColor,
+              backgroundColor: bgColor,
+              strokeWidth: widget.strokeWidth,
+            ),
           ),
         ),
       ),
