@@ -1,5 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../theme/expressive_theme.dart';
+
 /// A floating toolbar with circular icon buttons in a pill container.
 ///
 /// Matches the M3 Expressive toolbar pattern: icons sit in circles,
@@ -8,13 +10,15 @@ class ExpressiveFloatingToolbar extends StatelessWidget {
   const ExpressiveFloatingToolbar({
     super.key,
     required this.items,
-    this.elevation = 6,
+    this.elevation,
     this.backgroundColor,
     this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
   });
 
-  final List<FloatingToolbarItem> items;
-  final double elevation;
+  final List<ExpressiveFloatingToolbarItem> items;
+
+  /// Defaults to the theme's `elevation.level3`.
+  final double? elevation;
   final Color? backgroundColor;
   final EdgeInsetsGeometry padding;
 
@@ -22,9 +26,10 @@ class ExpressiveFloatingToolbar extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final bgColor = backgroundColor ?? scheme.surfaceContainerHigh;
+    final tokens = ExpressiveTheme.of(context);
 
     return Material(
-      elevation: elevation,
+      elevation: elevation ?? tokens.elevation.level3,
       color: bgColor,
       shape: const StadiumBorder(),
       clipBehavior: Clip.antiAlias,
@@ -97,8 +102,8 @@ class ExpressiveFloatingToolbar extends StatelessWidget {
 }
 
 /// An item in an [ExpressiveFloatingToolbar].
-class FloatingToolbarItem {
-  const FloatingToolbarItem({
+class ExpressiveFloatingToolbarItem {
+  const ExpressiveFloatingToolbarItem({
     required this.icon,
     this.onPressed,
     this.tooltip,
@@ -107,7 +112,7 @@ class FloatingToolbarItem {
   }) : _isDivider = false;
 
   /// Creates a divider between toolbar items.
-  const FloatingToolbarItem.divider()
+  const ExpressiveFloatingToolbarItem.divider()
     : icon = Icons.remove,
       onPressed = null,
       tooltip = null,
@@ -127,3 +132,10 @@ class FloatingToolbarItem {
 
   bool get isDivider => _isDivider;
 }
+
+// ---- Deprecated aliases (removed in 1.0.0) ----
+
+@Deprecated(
+  'Use ExpressiveFloatingToolbarItem instead. Will be removed in 1.0.0.',
+)
+typedef FloatingToolbarItem = ExpressiveFloatingToolbarItem;

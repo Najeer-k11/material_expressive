@@ -1,15 +1,16 @@
 import 'package:material_ui/material_ui.dart';
+
 import 'motion_scheme.dart';
 
 /// A widget that responds to drag gestures with spring physics.
 ///
 /// Fling velocity feeds into the spring simulation for natural
 /// release behavior.
-class GestureSpringBox extends StatefulWidget {
-  const GestureSpringBox({
+class ExpressiveGestureSpringBox extends StatefulWidget {
+  const ExpressiveGestureSpringBox({
     super.key,
     required this.child,
-    this.spring = const ExpressiveSpring(stiffness: 380, dampingRatio: 0.73),
+    this.spring,
     this.axis = Axis.vertical,
     this.maxOffset = 100,
     this.onFling,
@@ -17,17 +18,22 @@ class GestureSpringBox extends StatefulWidget {
   });
 
   final Widget child;
-  final ExpressiveSpring spring;
+
+  /// Defaults to [ExpressiveMotionScheme.expressive]'s `defaultSpatial`.
+  final ExpressiveSpring? spring;
+
+  ExpressiveSpring get _spring =>
+      spring ?? ExpressiveMotionScheme.expressive.defaultSpatial;
   final Axis axis;
   final double maxOffset;
   final ValueChanged<double>? onFling;
   final bool snapBack;
 
   @override
-  State<GestureSpringBox> createState() => _GestureSpringBoxState();
+  State<ExpressiveGestureSpringBox> createState() => _GestureSpringBoxState();
 }
 
-class _GestureSpringBoxState extends State<GestureSpringBox>
+class _GestureSpringBoxState extends State<ExpressiveGestureSpringBox>
     with SingleTickerProviderStateMixin {
   late AnimationController _ctrl;
   double _dragOffset = 0;
@@ -71,7 +77,7 @@ class _GestureSpringBoxState extends State<GestureSpringBox>
     widget.onFling?.call(velocity);
 
     if (widget.snapBack) {
-      final simulation = widget.spring.simulate(
+      final simulation = widget._spring.simulate(
         start: _dragOffset,
         target: 0,
         velocity: velocity,
@@ -103,3 +109,8 @@ class _GestureSpringBoxState extends State<GestureSpringBox>
     );
   }
 }
+
+// ---- Deprecated aliases (removed in 1.0.0) ----
+
+@Deprecated('Use ExpressiveGestureSpringBox instead. Will be removed in 1.0.0.')
+typedef GestureSpringBox = ExpressiveGestureSpringBox;

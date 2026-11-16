@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+
 import 'package:flutter/physics.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -39,8 +40,8 @@ class ExpressiveSpring {
 /// Two predefined schemes:
 /// - `standard` — for subtle transitions (nav, state changes)
 /// - `expressive` — for hero interactions and prominent UI
-class MotionScheme {
-  const MotionScheme({
+class ExpressiveMotionScheme {
+  const ExpressiveMotionScheme({
     required this.defaultSpatial,
     required this.fastSpatial,
     required this.slowSpatial,
@@ -60,7 +61,7 @@ class MotionScheme {
   final ExpressiveSpring slowEffects;
 
   /// Standard motion scheme — subtle, functional.
-  static const standard = MotionScheme(
+  static const standard = ExpressiveMotionScheme(
     defaultSpatial: ExpressiveSpring(stiffness: 700, dampingRatio: 0.9),
     fastSpatial: ExpressiveSpring(stiffness: 1400, dampingRatio: 1.0),
     slowSpatial: ExpressiveSpring(stiffness: 300, dampingRatio: 0.9),
@@ -70,7 +71,7 @@ class MotionScheme {
   );
 
   /// Expressive motion scheme — bouncy, engaging, hero transitions.
-  static const expressive = MotionScheme(
+  static const expressive = ExpressiveMotionScheme(
     defaultSpatial: ExpressiveSpring(stiffness: 380, dampingRatio: 0.73),
     fastSpatial: ExpressiveSpring(stiffness: 800, dampingRatio: 0.78),
     slowSpatial: ExpressiveSpring(stiffness: 200, dampingRatio: 0.7),
@@ -81,7 +82,7 @@ class MotionScheme {
 }
 
 /// Extension to easily run spring animations on controllers.
-extension SpringAnimationExt on AnimationController {
+extension ExpressiveSpringAnimation on AnimationController {
   /// Animate to [target] using spring physics.
   TickerFuture animateWithSpring(
     ExpressiveSpring spring, {
@@ -100,12 +101,12 @@ extension SpringAnimationExt on AnimationController {
 }
 
 /// A widget that applies spring-based animation to its child's properties.
-class SpringTransition extends StatefulWidget {
-  const SpringTransition({
+class ExpressiveSpringTransition extends StatefulWidget {
+  const ExpressiveSpringTransition({
     super.key,
     required this.child,
     this.isActive = false,
-    this.spring = const ExpressiveSpring(stiffness: 380, dampingRatio: 0.73),
+    this.spring,
     this.scaleActive = 1.0,
     this.scaleInactive = 1.0,
     this.offsetActive = Offset.zero,
@@ -114,17 +115,22 @@ class SpringTransition extends StatefulWidget {
 
   final Widget child;
   final bool isActive;
-  final ExpressiveSpring spring;
+
+  /// Defaults to [ExpressiveMotionScheme.expressive]'s `defaultSpatial`.
+  final ExpressiveSpring? spring;
+
+  ExpressiveSpring get _spring =>
+      spring ?? ExpressiveMotionScheme.expressive.defaultSpatial;
   final double scaleActive;
   final double scaleInactive;
   final Offset offsetActive;
   final Offset offsetInactive;
 
   @override
-  State<SpringTransition> createState() => _SpringTransitionState();
+  State<ExpressiveSpringTransition> createState() => _SpringTransitionState();
 }
 
-class _SpringTransitionState extends State<SpringTransition>
+class _SpringTransitionState extends State<ExpressiveSpringTransition>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
 
@@ -138,11 +144,11 @@ class _SpringTransitionState extends State<SpringTransition>
   }
 
   @override
-  void didUpdateWidget(SpringTransition old) {
+  void didUpdateWidget(ExpressiveSpringTransition old) {
     super.didUpdateWidget(old);
     if (widget.isActive != old.isActive) {
       _ctrl.animateWithSpring(
-        widget.spring,
+        widget._spring,
         target: widget.isActive ? 1.0 : 0.0,
       );
     }
@@ -178,3 +184,11 @@ class _SpringTransitionState extends State<SpringTransition>
     );
   }
 }
+
+// ---- Deprecated aliases (removed in 1.0.0) ----
+
+@Deprecated('Use ExpressiveMotionScheme instead. Will be removed in 1.0.0.')
+typedef MotionScheme = ExpressiveMotionScheme;
+
+@Deprecated('Use ExpressiveSpringTransition instead. Will be removed in 1.0.0.')
+typedef SpringTransition = ExpressiveSpringTransition;

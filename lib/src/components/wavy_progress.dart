@@ -1,11 +1,12 @@
 import 'dart:math' as math;
+
 import 'package:material_ui/material_ui.dart';
 
 /// A wavy/sinusoidal linear progress indicator (M3 Expressive style).
 ///
 /// The track has a sine wave shape instead of a straight line.
-class WavyLinearProgressIndicator extends StatefulWidget {
-  const WavyLinearProgressIndicator({
+class ExpressiveWavyLinearProgressIndicator extends StatefulWidget {
+  const ExpressiveWavyLinearProgressIndicator({
     super.key,
     this.value,
     this.height = 6,
@@ -14,7 +15,9 @@ class WavyLinearProgressIndicator extends StatefulWidget {
     this.color,
     this.backgroundColor,
     this.borderRadius = 3,
-    this.animationDuration = const Duration(milliseconds: 1800),
+    this.duration = const Duration(milliseconds: 1800),
+    @Deprecated('Use duration instead. Will be removed in 1.0.0.')
+    this._animationDuration,
   });
 
   /// Progress value (0.0 to 1.0). Null for indeterminate.
@@ -25,22 +28,32 @@ class WavyLinearProgressIndicator extends StatefulWidget {
   final Color? color;
   final Color? backgroundColor;
   final double borderRadius;
-  final Duration animationDuration;
+
+  /// Period of one wave animation cycle.
+  final Duration duration;
+
+  final Duration? _animationDuration;
+
+  @Deprecated('Use duration instead. Will be removed in 1.0.0.')
+  Duration get animationDuration => _animationDuration ?? duration;
 
   @override
-  State<WavyLinearProgressIndicator> createState() =>
+  State<ExpressiveWavyLinearProgressIndicator> createState() =>
       _WavyLinearProgressState();
 }
 
-class _WavyLinearProgressState extends State<WavyLinearProgressIndicator>
+class _WavyLinearProgressState
+    extends State<ExpressiveWavyLinearProgressIndicator>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
 
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(vsync: this, duration: widget.animationDuration)
-      ..repeat();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: widget._animationDuration ?? widget.duration,
+    )..repeat();
   }
 
   @override
@@ -171,8 +184,8 @@ class _WavyLinearPainter extends CustomPainter {
 /// A wavy circular progress indicator (M3 Expressive style).
 ///
 /// The circular track undulates with a sine wave along its circumference.
-class WavyCircularProgressIndicator extends StatefulWidget {
-  const WavyCircularProgressIndicator({
+class ExpressiveWavyCircularProgressIndicator extends StatefulWidget {
+  const ExpressiveWavyCircularProgressIndicator({
     super.key,
     this.value,
     this.size = 48,
@@ -181,7 +194,9 @@ class WavyCircularProgressIndicator extends StatefulWidget {
     this.waveCycles = 6,
     this.color,
     this.backgroundColor,
-    this.animationDuration = const Duration(milliseconds: 2000),
+    this.duration = const Duration(milliseconds: 2000),
+    @Deprecated('Use duration instead. Will be removed in 1.0.0.')
+    this._animationDuration,
   });
 
   /// Progress value (0.0 to 1.0). Null for indeterminate.
@@ -192,22 +207,32 @@ class WavyCircularProgressIndicator extends StatefulWidget {
   final int waveCycles;
   final Color? color;
   final Color? backgroundColor;
-  final Duration animationDuration;
+
+  /// Period of one wave animation cycle.
+  final Duration duration;
+
+  final Duration? _animationDuration;
+
+  @Deprecated('Use duration instead. Will be removed in 1.0.0.')
+  Duration get animationDuration => _animationDuration ?? duration;
 
   @override
-  State<WavyCircularProgressIndicator> createState() =>
+  State<ExpressiveWavyCircularProgressIndicator> createState() =>
       _WavyCircularProgressState();
 }
 
-class _WavyCircularProgressState extends State<WavyCircularProgressIndicator>
+class _WavyCircularProgressState
+    extends State<ExpressiveWavyCircularProgressIndicator>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
 
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(vsync: this, duration: widget.animationDuration)
-      ..repeat();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: widget._animationDuration ?? widget.duration,
+    )..repeat();
   }
 
   @override
@@ -341,3 +366,15 @@ class _WavyCircularPainter extends CustomPainter {
   bool shouldRepaint(_WavyCircularPainter old) =>
       progress != old.progress || phase != old.phase;
 }
+
+// ---- Deprecated aliases (removed in 1.0.0) ----
+
+@Deprecated(
+  'Use ExpressiveWavyLinearProgressIndicator instead. Will be removed in 1.0.0.',
+)
+typedef WavyLinearProgressIndicator = ExpressiveWavyLinearProgressIndicator;
+
+@Deprecated(
+  'Use ExpressiveWavyCircularProgressIndicator instead. Will be removed in 1.0.0.',
+)
+typedef WavyCircularProgressIndicator = ExpressiveWavyCircularProgressIndicator;

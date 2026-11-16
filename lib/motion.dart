@@ -1,5 +1,12 @@
-/// Motion system: spring physics, motion schemes, transitions, page routes,
-/// gesture-driven animation, shape transforms, and accessibility.
+/// Motion system, in layers:
+///
+/// 1. `ExpressiveMotionTokens` (in tokens.dart) — raw durations and curves.
+/// 2. [ExpressiveMotionSpec] — tween presets (duration + curve).
+/// 3. [ExpressiveMotionScheme] — spring presets (`standard`, `expressive`).
+/// 4. [ExpressiveComponentMotion] — which spring each component uses.
+///
+/// Plus transitions, page routes, gesture-driven springs, shape container
+/// transforms, and reduced-motion helpers ([ExpressiveMotionAccessibility]).
 library;
 
 export 'src/motion/motion_specs.dart';

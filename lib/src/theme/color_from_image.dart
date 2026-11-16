@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:ui' as ui;
+
 import 'package:material_ui/material_ui.dart';
 
 /// Extract a dominant/seed color from an image.
 ///
 /// Pure Dart implementation — no platform dependencies.
 /// Useful for theming from album art, product photos, wallpapers, etc.
-class ColorFromImage {
-  ColorFromImage._();
+class ExpressiveColorFromImage {
+  ExpressiveColorFromImage._();
 
   /// Extract the dominant color from an [ImageProvider].
   ///
@@ -130,3 +131,8 @@ class _ColorBucket {
     ).toColor();
   }
 }
+
+// ---- Deprecated aliases (removed in 1.0.0) ----
+
+@Deprecated('Use ExpressiveColorFromImage instead. Will be removed in 1.0.0.')
+typedef ColorFromImage = ExpressiveColorFromImage;

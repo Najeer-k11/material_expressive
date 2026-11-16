@@ -1,5 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../theme/expressive_theme.dart';
+
 /// Semantic surface types.
 enum ExpressiveSurfaceType {
   surface,
@@ -50,7 +52,9 @@ class ExpressiveSurface extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final resolvedRadius = borderRadius ?? BorderRadius.circular(16);
+    final resolvedRadius =
+        borderRadius ??
+        BorderRadius.circular(ExpressiveTheme.of(context).radius.lg);
     final textDirection = Directionality.maybeOf(context);
     final resolvedBorderRadius = resolvedRadius.resolve(textDirection);
     return Material(

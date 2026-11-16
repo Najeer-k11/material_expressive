@@ -1,10 +1,11 @@
 import 'package:material_ui/material_ui.dart';
+
 import '../shapes/shape_morph.dart';
-import '../shapes/material_shapes.dart';
+import '../shapes/expressive_shapes.dart';
 
 /// A container transform that morphs shape during the transition.
-class ShapeContainerTransform extends StatefulWidget {
-  const ShapeContainerTransform({
+class ExpressiveShapeContainerTransform extends StatefulWidget {
+  const ExpressiveShapeContainerTransform({
     super.key,
     required this.closedBuilder,
     required this.openBuilder,
@@ -24,11 +25,12 @@ class ShapeContainerTransform extends StatefulWidget {
   final Curve curve;
 
   @override
-  State<ShapeContainerTransform> createState() =>
+  State<ExpressiveShapeContainerTransform> createState() =>
       _ShapeContainerTransformState();
 }
 
-class _ShapeContainerTransformState extends State<ShapeContainerTransform> {
+class _ShapeContainerTransformState
+    extends State<ExpressiveShapeContainerTransform> {
   void _open() {
     Navigator.of(context).push(
       _ShapeTransformRoute(
@@ -53,7 +55,7 @@ class _ShapeContainerTransformState extends State<ShapeContainerTransform> {
       height: widget.closedSize,
       child: Material(
         color: color,
-        shape: MorphableShapeBorder(points: shape),
+        shape: ExpressiveMorphableShapeBorder(points: shape),
         clipBehavior: Clip.antiAlias,
         child: widget.closedBuilder(context, _open),
       ),
@@ -78,7 +80,7 @@ class _ShapeTransformRoute extends PageRouteBuilder<void> {
            return AnimatedBuilder(
              animation: curvedAnim,
              builder: (context, _) {
-               final points = lerpShapePoints(
+               final points = ExpressiveShapes.lerp(
                  closedShape,
                  ExpressiveShapes.square,
                  curvedAnim.value,
@@ -107,9 +109,16 @@ class _ShapeClipper extends CustomClipper<Path> {
     final scaled = points
         .map((p) => Offset(p.dx * size.width, p.dy * size.height))
         .toList();
-    return smoothPathFromScaled(scaled);
+    return ExpressiveShapes.smoothPath(scaled);
   }
 
   @override
   bool shouldReclip(_ShapeClipper old) => points != old.points;
 }
+
+// ---- Deprecated aliases (removed in 1.0.0) ----
+
+@Deprecated(
+  'Use ExpressiveShapeContainerTransform instead. Will be removed in 1.0.0.',
+)
+typedef ShapeContainerTransform = ExpressiveShapeContainerTransform;

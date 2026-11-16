@@ -4,13 +4,17 @@
 ///
 /// ```dart
 /// import 'package:material_expressive/material_expressive.dart'; // everything
-/// import 'package:material_expressive/tokens.dart';    // tokens only
-/// import 'package:material_expressive/motion.dart';    // motion only
-/// import 'package:material_expressive/theme.dart';     // theme generation
-/// import 'package:material_expressive/components.dart'; // surfaces, icons, loaders
-/// import 'package:material_expressive/templates.dart'; // screen templates
-/// import 'package:material_expressive/devtools.dart';  // debugging tools
+/// import 'package:material_expressive/tokens.dart';     // design tokens
+/// import 'package:material_expressive/core.dart';       // context, adaptive, layout
+/// import 'package:material_expressive/motion.dart';     // springs, specs, transitions
+/// import 'package:material_expressive/shapes.dart';     // shapes, morphing, RTL
+/// import 'package:material_expressive/theme.dart';      // ExpressiveTheme, colors
+/// import 'package:material_expressive/components.dart'; // widgets, component themes
+/// import 'package:material_expressive/devtools.dart';   // debugging tools
 /// ```
+///
+/// Naming: every public type starts with `Expressive`. Pre-0.10 names are
+/// kept as deprecated aliases until 1.0.0.
 library;
 
 export 'tokens.dart';

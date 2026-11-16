@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+
 import 'package:flutter/painting.dart';
 
 /// All 35 Material 3 Expressive shape definitions.
@@ -6,7 +7,7 @@ import 'package:flutter/painting.dart';
 /// Each shape is defined as a list of normalized points (0..1 range)
 /// that can be interpolated for shape morphing.
 class ExpressiveShapes {
-  ExpressiveShapes._(); 
+  ExpressiveShapes._();
   static List<Offset> get circle => _polygon(32, 0);
   static List<Offset> get square => _roundedRect(0.15);
   static List<Offset> get pill => _pill();
@@ -44,6 +45,67 @@ class ExpressiveShapes {
   static List<Offset> get clamShell => _clamShell();
 
   /// Get shape by name.
+  /// Builds a smooth closed Catmull-Rom path through [pts], which are
+  /// already scaled to pixel coordinates.
+  static Path smoothPath(List<Offset> pts) {
+    if (pts.length < 3) {
+      final path = Path()..moveTo(pts[0].dx, pts[0].dy);
+      for (int i = 1; i < pts.length; i++) {
+        path.lineTo(pts[i].dx, pts[i].dy);
+      }
+      path.close();
+      return path;
+    }
+
+    final path = Path();
+    final n = pts.length;
+
+    // Catmull-Rom to cubic bezier conversion
+    path.moveTo(pts[0].dx, pts[0].dy);
+    for (int i = 0; i < n; i++) {
+      final p0 = pts[(i - 1 + n) % n];
+      final p1 = pts[i];
+      final p2 = pts[(i + 1) % n];
+      final p3 = pts[(i + 2) % n];
+
+      // Control points from Catmull-Rom
+      final cp1x = p1.dx + (p2.dx - p0.dx) / 6;
+      final cp1y = p1.dy + (p2.dy - p0.dy) / 6;
+      final cp2x = p2.dx - (p3.dx - p1.dx) / 6;
+      final cp2y = p2.dy - (p3.dy - p1.dy) / 6;
+
+      path.cubicTo(cp1x, cp1y, cp2x, cp2y, p2.dx, p2.dy);
+    }
+    path.close();
+    return path;
+  }
+
+  /// Interpolates between two shapes, resampling to equal point counts.
+  static List<Offset> lerp(List<Offset> a, List<Offset> b, double t) {
+    // Ensure same length by resampling
+    final targetLen = a.length > b.length ? a.length : b.length;
+    final aa = _resample(a, targetLen);
+    final bb = _resample(b, targetLen);
+    return List.generate(targetLen, (i) => Offset.lerp(aa[i], bb[i], t)!);
+  }
+
+  static List<Offset> _resample(List<Offset> points, int count) {
+    if (points.isEmpty) return List.filled(count, Offset.zero);
+    if (points.length == count) return points;
+    final result = <Offset>[];
+    for (int i = 0; i < count; i++) {
+      final t = i / count * points.length;
+      final idx = t.floor() % points.length;
+      final frac = t - t.floor();
+      final p1 = points[idx];
+      final p2 = points[(idx + 1) % points.length];
+      result.add(
+        Offset(p1.dx + (p2.dx - p1.dx) * frac, p1.dy + (p2.dy - p1.dy) * frac),
+      );
+    }
+    return result;
+  }
+
   static List<Offset> byName(String name) {
     switch (name) {
       case 'circle':

@@ -1,48 +1,58 @@
 import 'dart:math' as math;
+
 import 'package:flutter/painting.dart';
+
+import 'radius_tokens.dart';
 
 /// Shape category in the expressive design system.
 enum ExpressiveShapeType { rounded, squircle, organic, full }
 
 /// Shape tokens for the Expressive design system.
 class ExpressiveShapeTokens {
-  const ExpressiveShapeTokens({this.type = ExpressiveShapeType.rounded});
+  const ExpressiveShapeTokens({
+    this.type = ExpressiveShapeType.rounded,
+    this.radius = ExpressiveRadiusTokens.standard,
+  });
 
   final ExpressiveShapeType type;
 
-  ShapeBorder shape(double radius) {
+  /// Corner radii used by the [xs]..[xxl] getters.
+  final ExpressiveRadiusTokens radius;
+
+  /// A [ShapeBorder] of this [type] with the given corner radius.
+  ShapeBorder shape(double cornerRadius) {
     switch (type) {
       case ExpressiveShapeType.rounded:
         return RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(radius),
+          borderRadius: BorderRadius.circular(cornerRadius),
         );
       case ExpressiveShapeType.squircle:
-        return SquircleBorder(radius: radius);
+        return ExpressiveSquircleBorder(radius: cornerRadius);
       case ExpressiveShapeType.organic:
-        return OrganicBorder(radius: radius);
+        return ExpressiveOrganicBorder(radius: cornerRadius);
       case ExpressiveShapeType.full:
         return const StadiumBorder();
     }
   }
 
-  ShapeBorder get xs => shape(4);
-  ShapeBorder get sm => shape(8);
-  ShapeBorder get md => shape(12);
-  ShapeBorder get lg => shape(16);
-  ShapeBorder get xl => shape(24);
-  ShapeBorder get xxl => shape(28);
+  ShapeBorder get xs => shape(radius.xs);
+  ShapeBorder get sm => shape(radius.sm);
+  ShapeBorder get md => shape(radius.md);
+  ShapeBorder get lg => shape(radius.lg);
+  ShapeBorder get xl => shape(radius.xl);
+  ShapeBorder get xxl => shape(radius.xxl);
   ShapeBorder get full => const StadiumBorder();
 }
 
 /// Squircle (superellipse) border.
-class SquircleBorder extends OutlinedBorder {
-  const SquircleBorder({this.radius = 0, super.side});
+class ExpressiveSquircleBorder extends OutlinedBorder {
+  const ExpressiveSquircleBorder({this.radius = 0, super.side});
 
   final double radius;
 
   @override
   ShapeBorder scale(double t) =>
-      SquircleBorder(radius: radius * t, side: side.scale(t));
+      ExpressiveSquircleBorder(radius: radius * t, side: side.scale(t));
 
   @override
   EdgeInsetsGeometry get dimensions => EdgeInsets.all(side.width);
@@ -68,7 +78,7 @@ class SquircleBorder extends OutlinedBorder {
 
   @override
   OutlinedBorder copyWith({BorderSide? side}) {
-    return SquircleBorder(radius: radius, side: side ?? this.side);
+    return ExpressiveSquircleBorder(radius: radius, side: side ?? this.side);
   }
 
   static Path _squirclePath(Rect rect, double radius) {
@@ -114,21 +124,23 @@ class SquircleBorder extends OutlinedBorder {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SquircleBorder && radius == other.radius && side == other.side;
+      other is ExpressiveSquircleBorder &&
+          radius == other.radius &&
+          side == other.side;
 
   @override
   int get hashCode => Object.hash(radius, side);
 }
 
 /// Organic blob-like border shape.
-class OrganicBorder extends OutlinedBorder {
-  const OrganicBorder({this.radius = 0, super.side});
+class ExpressiveOrganicBorder extends OutlinedBorder {
+  const ExpressiveOrganicBorder({this.radius = 0, super.side});
 
   final double radius;
 
   @override
   ShapeBorder scale(double t) =>
-      OrganicBorder(radius: radius * t, side: side.scale(t));
+      ExpressiveOrganicBorder(radius: radius * t, side: side.scale(t));
 
   @override
   EdgeInsetsGeometry get dimensions => EdgeInsets.all(side.width);
@@ -154,7 +166,7 @@ class OrganicBorder extends OutlinedBorder {
 
   @override
   OutlinedBorder copyWith({BorderSide? side}) {
-    return OrganicBorder(radius: radius, side: side ?? this.side);
+    return ExpressiveOrganicBorder(radius: radius, side: side ?? this.side);
   }
 
   static Path _organicPath(Rect rect, double radius) {
@@ -206,8 +218,18 @@ class OrganicBorder extends OutlinedBorder {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is OrganicBorder && radius == other.radius && side == other.side;
+      other is ExpressiveOrganicBorder &&
+          radius == other.radius &&
+          side == other.side;
 
   @override
   int get hashCode => Object.hash(radius, side);
 }
+
+// ---- Deprecated aliases (removed in 1.0.0) ----
+
+@Deprecated('Use ExpressiveSquircleBorder instead. Will be removed in 1.0.0.')
+typedef SquircleBorder = ExpressiveSquircleBorder;
+
+@Deprecated('Use ExpressiveOrganicBorder instead. Will be removed in 1.0.0.')
+typedef OrganicBorder = ExpressiveOrganicBorder;

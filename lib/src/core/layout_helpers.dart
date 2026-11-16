@@ -1,8 +1,10 @@
 import 'package:material_ui/material_ui.dart';
 
+import 'adaptive.dart';
+
 /// Maximum content width for readability.
-class ContentWidth extends StatelessWidget {
-  const ContentWidth({
+class ExpressiveContentWidth extends StatelessWidget {
+  const ExpressiveContentWidth({
     super.key,
     required this.child,
     this.maxWidth = 840,
@@ -26,14 +28,31 @@ class ContentWidth extends StatelessWidget {
 }
 
 /// Responsive gap that adapts to device size.
-class AdaptiveGap extends StatelessWidget {
-  const AdaptiveGap({super.key, this.phone = 16, this.tablet, this.desktop});
+class ExpressiveAdaptiveGap extends StatelessWidget {
+  const ExpressiveAdaptiveGap({
+    super.key,
+    this.phone = 16,
+    this.tablet,
+    this.desktop,
+  });
 
-  const AdaptiveGap.sm({super.key}) : phone = 8, tablet = 12, desktop = 16;
+  /// Spacing `sm` (8 / 12 / 16).
+  const ExpressiveAdaptiveGap.sm({super.key})
+    : phone = 8,
+      tablet = 12,
+      desktop = 16;
 
-  const AdaptiveGap.md({super.key}) : phone = 16, tablet = 24, desktop = 32;
+  /// Spacing `lg` (16 / 24 / 32).
+  const ExpressiveAdaptiveGap.md({super.key})
+    : phone = 16,
+      tablet = 24,
+      desktop = 32;
 
-  const AdaptiveGap.lg({super.key}) : phone = 24, tablet = 32, desktop = 40;
+  /// Spacing `xl` (24 / 32 / 40).
+  const ExpressiveAdaptiveGap.lg({super.key})
+    : phone = 24,
+      tablet = 32,
+      desktop = 40;
 
   final double phone;
   final double? tablet;
@@ -41,22 +60,19 @@ class AdaptiveGap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    double size;
-    if (width >= 1200) {
-      size = desktop ?? tablet ?? phone;
-    } else if (width >= 600) {
-      size = tablet ?? phone;
-    } else {
-      size = phone;
-    }
+    final size = ExpressiveAdaptive.value(
+      context,
+      phone: phone,
+      tablet: tablet,
+      desktop: desktop,
+    );
     return SizedBox(width: size, height: size);
   }
 }
 
 /// Adaptive page margins.
-class PageMargins extends StatelessWidget {
-  const PageMargins({
+class ExpressivePageMargins extends StatelessWidget {
+  const ExpressivePageMargins({
     super.key,
     required this.child,
     this.phoneMargin = 16,
@@ -71,18 +87,26 @@ class PageMargins extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    double margin;
-    if (width >= 1200) {
-      margin = desktopMargin;
-    } else if (width >= 600) {
-      margin = tabletMargin;
-    } else {
-      margin = phoneMargin;
-    }
+    final margin = ExpressiveAdaptive.value(
+      context,
+      phone: phoneMargin,
+      tablet: tabletMargin,
+      desktop: desktopMargin,
+    );
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: margin),
       child: child,
     );
   }
 }
+
+// ---- Deprecated aliases (removed in 1.0.0) ----
+
+@Deprecated('Use ExpressiveContentWidth instead. Will be removed in 1.0.0.')
+typedef ContentWidth = ExpressiveContentWidth;
+
+@Deprecated('Use ExpressiveAdaptiveGap instead. Will be removed in 1.0.0.')
+typedef AdaptiveGap = ExpressiveAdaptiveGap;
+
+@Deprecated('Use ExpressivePageMargins instead. Will be removed in 1.0.0.')
+typedef PageMargins = ExpressivePageMargins;

@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:animations/animations.dart';
+
+import 'transitions.dart';
 
 /// Types of page transitions available.
 enum ExpressivePageTransitionType { fadeThrough, sharedAxis, fade }
@@ -46,7 +47,7 @@ class ExpressivePageRoute<T> extends PageRouteBuilder<T> {
     switch (type) {
       case ExpressivePageTransitionType.fadeThrough:
         return (context, animation, secondaryAnimation, child) {
-          return FadeThroughTransition(
+          return ExpressiveTransitions.fadeThrough(
             animation: animation,
             secondaryAnimation: secondaryAnimation,
             child: child,
@@ -54,10 +55,9 @@ class ExpressivePageRoute<T> extends PageRouteBuilder<T> {
         };
       case ExpressivePageTransitionType.sharedAxis:
         return (context, animation, secondaryAnimation, child) {
-          return SharedAxisTransition(
+          return ExpressiveTransitions.sharedAxisHorizontal(
             animation: animation,
             secondaryAnimation: secondaryAnimation,
-            transitionType: SharedAxisTransitionType.horizontal,
             child: child,
           );
         };
@@ -81,10 +81,9 @@ class ExpressivePageTransitionsBuilder extends PageTransitionsBuilder {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    return SharedAxisTransition(
+    return ExpressiveTransitions.sharedAxisHorizontal(
       animation: animation,
       secondaryAnimation: secondaryAnimation,
-      transitionType: SharedAxisTransitionType.horizontal,
       child: child,
     );
   }

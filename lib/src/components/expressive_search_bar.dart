@@ -1,5 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../theme/expressive_theme.dart';
+
 /// An expressive search bar that morphs from collapsed to expanded with spring.
 class ExpressiveSearchBar extends StatefulWidget {
   const ExpressiveSearchBar({
@@ -13,7 +15,7 @@ class ExpressiveSearchBar extends StatefulWidget {
     this.trailing,
     this.collapsedWidth = 56,
     this.expandedWidth = double.infinity,
-    this.borderRadius = 28,
+    this.borderRadius,
     this.duration = const Duration(milliseconds: 400),
     this.curve = Curves.easeOut,
     this.autoFocus = false,
@@ -28,7 +30,9 @@ class ExpressiveSearchBar extends StatefulWidget {
   final List<Widget>? trailing;
   final double collapsedWidth;
   final double expandedWidth;
-  final double borderRadius;
+
+  /// Defaults to the theme's `radius.xxl`.
+  final double? borderRadius;
   final Duration duration;
   final Curve curve;
   final bool autoFocus;
@@ -70,6 +74,8 @@ class _ExpressiveSearchBarState extends State<ExpressiveSearchBar> {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final tokens = ExpressiveTheme.of(context);
+    final radius = widget.borderRadius ?? tokens.radius.xxl;
 
     return AnimatedContainer(
       duration: widget.duration,
@@ -78,14 +84,14 @@ class _ExpressiveSearchBarState extends State<ExpressiveSearchBar> {
       height: 56,
       decoration: BoxDecoration(
         color: scheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(widget.borderRadius),
+        borderRadius: BorderRadius.circular(radius),
       ),
       clipBehavior: Clip.antiAlias,
       child: _expanded
           ? Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 16),
+                  padding: EdgeInsets.only(left: tokens.spacing.lg),
                   child:
                       widget.leading ??
                       Icon(Icons.search, color: scheme.onSurfaceVariant),
@@ -100,8 +106,8 @@ class _ExpressiveSearchBarState extends State<ExpressiveSearchBar> {
                     decoration: InputDecoration(
                       hintText: widget.hintText,
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 12,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: tokens.spacing.md,
                       ),
                     ),
                   ),
@@ -123,7 +129,7 @@ class _ExpressiveSearchBarState extends State<ExpressiveSearchBar> {
                 _expand();
                 widget.onTap?.call();
               },
-              borderRadius: BorderRadius.circular(widget.borderRadius),
+              borderRadius: BorderRadius.circular(radius),
               child: Center(
                 child: Icon(Icons.search, color: scheme.onSurfaceVariant),
               ),

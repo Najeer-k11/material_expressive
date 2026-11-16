@@ -1,11 +1,12 @@
 import 'package:material_ui/material_ui.dart';
+
 import '../tokens/color_tokens.dart';
 import '../tokens/spacing_tokens.dart';
 import '../tokens/radius_tokens.dart';
 
 /// Debug panel showing current token values.
-class TokenInspector extends StatelessWidget {
-  const TokenInspector({super.key});
+class ExpressiveTokenInspector extends StatelessWidget {
+  const ExpressiveTokenInspector({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -68,9 +69,8 @@ class _Header extends StatelessWidget {
     padding: const EdgeInsets.only(bottom: 8),
     child: Text(
       title,
-      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-        color: Theme.of(context).colorScheme.primary,
-      ),
+      style: Theme.of(context).textTheme.titleSmall
+          ?.copyWith(color: Theme.of(context).colorScheme.primary),
     ),
   );
 }
@@ -123,3 +123,8 @@ class _Row extends StatelessWidget {
     ),
   );
 }
+
+// ---- Deprecated aliases (removed in 1.0.0) ----
+
+@Deprecated('Use ExpressiveTokenInspector instead. Will be removed in 1.0.0.')
+typedef TokenInspector = ExpressiveTokenInspector;

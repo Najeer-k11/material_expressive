@@ -1,76 +1,29 @@
 import 'package:material_ui/material_ui.dart';
 
+import 'expressive_shapes.dart';
+
 /// Builds a smooth closed path through points using Catmull-Rom spline.
 Path _smoothPath(List<Offset> points, Size size) {
   final scaled = points
       .map((p) => Offset(p.dx * size.width, p.dy * size.height))
       .toList();
-  return smoothPathFromScaled(scaled);
+  return ExpressiveShapes.smoothPath(scaled);
 }
 
-/// Builds a smooth closed path from already-scaled points.
-Path smoothPathFromScaled(List<Offset> pts) {
-  if (pts.length < 3) {
-    final path = Path()..moveTo(pts[0].dx, pts[0].dy);
-    for (int i = 1; i < pts.length; i++) {
-      path.lineTo(pts[i].dx, pts[i].dy);
-    }
-    path.close();
-    return path;
-  }
+/// Deprecated: use [ExpressiveShapes.smoothPath].
+@Deprecated(
+  'Use ExpressiveShapes.smoothPath instead. Will be removed in 1.0.0.',
+)
+Path smoothPathFromScaled(List<Offset> pts) => ExpressiveShapes.smoothPath(pts);
 
-  final path = Path();
-  final n = pts.length;
-
-  // Catmull-Rom to cubic bezier conversion
-  path.moveTo(pts[0].dx, pts[0].dy);
-  for (int i = 0; i < n; i++) {
-    final p0 = pts[(i - 1 + n) % n];
-    final p1 = pts[i];
-    final p2 = pts[(i + 1) % n];
-    final p3 = pts[(i + 2) % n];
-
-    // Control points from Catmull-Rom
-    final cp1x = p1.dx + (p2.dx - p0.dx) / 6;
-    final cp1y = p1.dy + (p2.dy - p0.dy) / 6;
-    final cp2x = p2.dx - (p3.dx - p1.dx) / 6;
-    final cp2y = p2.dy - (p3.dy - p1.dy) / 6;
-
-    path.cubicTo(cp1x, cp1y, cp2x, cp2y, p2.dx, p2.dy);
-  }
-  path.close();
-  return path;
-}
-
-/// Interpolates between two shape point lists.
-List<Offset> lerpShapePoints(List<Offset> a, List<Offset> b, double t) {
-  // Ensure same length by resampling
-  final targetLen = a.length > b.length ? a.length : b.length;
-  final aa = _resample(a, targetLen);
-  final bb = _resample(b, targetLen);
-  return List.generate(targetLen, (i) => Offset.lerp(aa[i], bb[i], t)!);
-}
-
-List<Offset> _resample(List<Offset> points, int count) {
-  if (points.isEmpty) return List.filled(count, Offset.zero);
-  if (points.length == count) return points;
-  final result = <Offset>[];
-  for (int i = 0; i < count; i++) {
-    final t = i / count * points.length;
-    final idx = t.floor() % points.length;
-    final frac = t - t.floor();
-    final p1 = points[idx];
-    final p2 = points[(idx + 1) % points.length];
-    result.add(
-      Offset(p1.dx + (p2.dx - p1.dx) * frac, p1.dy + (p2.dy - p1.dy) * frac),
-    );
-  }
-  return result;
-}
+/// Deprecated: use [ExpressiveShapes.lerp].
+@Deprecated('Use ExpressiveShapes.lerp instead. Will be removed in 1.0.0.')
+List<Offset> lerpShapePoints(List<Offset> a, List<Offset> b, double t) =>
+    ExpressiveShapes.lerp(a, b, t);
 
 /// A widget that morphs between two ExpressiveShapes with animation.
-class ShapeMorph extends StatefulWidget {
-  const ShapeMorph({
+class ExpressiveShapeMorph extends StatefulWidget {
+  const ExpressiveShapeMorph({
     super.key,
     required this.shape,
     this.size = 64,
@@ -91,10 +44,10 @@ class ShapeMorph extends StatefulWidget {
   final BorderSide? border;
 
   @override
-  State<ShapeMorph> createState() => _ShapeMorphState();
+  State<ExpressiveShapeMorph> createState() => _ShapeMorphState();
 }
 
-class _ShapeMorphState extends State<ShapeMorph>
+class _ShapeMorphState extends State<ExpressiveShapeMorph>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -111,7 +64,7 @@ class _ShapeMorphState extends State<ShapeMorph>
   }
 
   @override
-  void didUpdateWidget(ShapeMorph old) {
+  void didUpdateWidget(ExpressiveShapeMorph old) {
     super.didUpdateWidget(old);
     if (widget.shape != old.shape) {
       _fromShape = _currentPoints();
@@ -121,7 +74,7 @@ class _ShapeMorphState extends State<ShapeMorph>
   }
 
   List<Offset> _currentPoints() {
-    return lerpShapePoints(_fromShape, _toShape, _animation.value);
+    return ExpressiveShapes.lerp(_fromShape, _toShape, _animation.value);
   }
 
   @override
@@ -139,7 +92,7 @@ class _ShapeMorphState extends State<ShapeMorph>
       child: AnimatedBuilder(
         animation: _animation,
         builder: (context, child) {
-          final points = lerpShapePoints(
+          final points = ExpressiveShapes.lerp(
             _fromShape,
             _toShape,
             _animation.value,
@@ -189,8 +142,8 @@ class _ShapePainter extends CustomPainter {
 }
 
 /// A ShapeBorder that renders any ExpressiveShapes polygon.
-class MorphableShapeBorder extends OutlinedBorder {
-  const MorphableShapeBorder({required this.points, super.side});
+class ExpressiveMorphableShapeBorder extends OutlinedBorder {
+  const ExpressiveMorphableShapeBorder({required this.points, super.side});
 
   final List<Offset> points;
 
@@ -221,7 +174,7 @@ class MorphableShapeBorder extends OutlinedBorder {
           ),
         )
         .toList();
-    return smoothPathFromScaled(scaled);
+    return ExpressiveShapes.smoothPath(scaled);
   }
 
   @override
@@ -232,15 +185,25 @@ class MorphableShapeBorder extends OutlinedBorder {
 
   @override
   OutlinedBorder copyWith({BorderSide? side}) =>
-      MorphableShapeBorder(points: points, side: side ?? this.side);
+      ExpressiveMorphableShapeBorder(points: points, side: side ?? this.side);
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is MorphableShapeBorder &&
+      other is ExpressiveMorphableShapeBorder &&
           points == other.points &&
           side == other.side;
 
   @override
   int get hashCode => Object.hash(points, side);
 }
+
+// ---- Deprecated aliases (removed in 1.0.0) ----
+
+@Deprecated('Use ExpressiveShapeMorph instead. Will be removed in 1.0.0.')
+typedef ShapeMorph = ExpressiveShapeMorph;
+
+@Deprecated(
+  'Use ExpressiveMorphableShapeBorder instead. Will be removed in 1.0.0.',
+)
+typedef MorphableShapeBorder = ExpressiveMorphableShapeBorder;

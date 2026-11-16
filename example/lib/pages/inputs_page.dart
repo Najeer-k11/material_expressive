@@ -47,19 +47,24 @@ class _InputsPageState extends State<InputsPage> {
           ]),
 
           _Section('Wavy Progress', [
-            WavyLinearProgressIndicator(
+            ExpressiveWavyLinearProgressIndicator(
               value: _sliderVal,
               color: scheme.primary,
             ),
             const SizedBox(height: 12),
-            WavyLinearProgressIndicator(color: scheme.secondary),
+            ExpressiveWavyLinearProgressIndicator(color: scheme.secondary),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                WavyCircularProgressIndicator(value: _sliderVal),
-                WavyCircularProgressIndicator(color: scheme.secondary),
-                ContainedLoadingIndicator(size: 48, color: scheme.tertiary),
+                ExpressiveWavyCircularProgressIndicator(value: _sliderVal),
+                ExpressiveWavyCircularProgressIndicator(
+                  color: scheme.secondary,
+                ),
+                ExpressiveContainedLoadingIndicator(
+                  size: 48,
+                  color: scheme.tertiary,
+                ),
               ],
             ),
           ]),
@@ -244,9 +249,8 @@ class _Section extends StatelessWidget {
         children: [
           Text(
             title,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: Theme.of(context).colorScheme.primary,
-            ),
+            style: Theme.of(context).textTheme.titleSmall
+                ?.copyWith(color: Theme.of(context).colorScheme.primary),
           ),
           const SizedBox(height: 10),
           ...children,

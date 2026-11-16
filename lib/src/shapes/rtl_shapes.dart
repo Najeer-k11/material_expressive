@@ -3,8 +3,8 @@ import 'package:material_ui/material_ui.dart';
 /// RTL-aware shape utilities.
 ///
 /// Flips directional shapes (arrows, fans) for RTL layouts.
-class RtlShapes {
-  RtlShapes._();
+class ExpressiveRtlShapes {
+  ExpressiveRtlShapes._();
 
   /// Flip a shape horizontally (mirror around x=0.5).
   static List<Offset> flipHorizontal(List<Offset> points) {
@@ -68,3 +68,8 @@ class RtlShapes {
     return result;
   }
 }
+
+// ---- Deprecated aliases (removed in 1.0.0) ----
+
+@Deprecated('Use ExpressiveRtlShapes instead. Will be removed in 1.0.0.')
+typedef RtlShapes = ExpressiveRtlShapes;

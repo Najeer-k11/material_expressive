@@ -15,7 +15,6 @@ Material Expressive brings Google's M3 Expressive design language (announced at 
 - Offers **35 morphable shapes** matching the official M3 Expressive spec
 - Generates **complete themes** from a single seed color
 - Enhances **existing Material widgets** through `ThemeData` extensions
-- Provides **screen templates** as layout guidance (not locked-in widgets)
 
 ---
 
@@ -27,12 +26,15 @@ lib/
 ├── tokens.dart                ← design tokens only
 ├── shapes.dart                ← 35 shapes + morphing + RTL
 ├── motion.dart                ← springs, schemes, gestures, accessibility
-├── theme.dart                 ← theme gen, vibrant colors, harmonization
-├── components.dart            ← surfaces, buttons, indicators, behaviors
-├── templates.dart             ← screen templates
+├── theme.dart                 ← ExpressiveTheme(Data), vibrant colors, harmonization
+├── components.dart            ← widgets + ExpressiveComponentThemes
 ├── core.dart                  ← extensions, adaptive, layout
 └── devtools.dart              ← debugging tools
 ```
+
+**Naming:** every public type starts with `Expressive`. Static helpers live on
+classes (`ExpressiveShapes.lerp`, `ExpressiveAdaptive.value`, …), and
+`ExpressiveTheme` / `ExpressiveThemeData` mirror Flutter's `Theme` / `ThemeData`.
 
 Each sub-library can be imported independently. You don't pay for what you don't use (tree-shaking handles the rest).
 
@@ -40,7 +42,7 @@ Each sub-library can be imported independently. You don't pay for what you don't
 
 ## Design Tokens
 
-Tokens are the foundation. Nothing in the system uses hardcoded values.
+Tokens are the foundation. Package components take their default radii, spacing, elevation and durations from the active `ExpressiveTheme` (or standard tokens when there is none), so a custom `ExpressiveThemeData` restyles them. Component-specific sizes that have no matching token (e.g. a 56dp search bar height) stay as documented constructor defaults.
 
 ### Spacing
 
@@ -92,9 +94,16 @@ Plus curves: standard, decelerate, accelerate, emphasized, spring.
 
 ## Motion System
 
-The motion system is the biggest difference from standard Material. Everything uses **spring physics**, not fixed durations.
+The motion system is the biggest difference from standard Material. Interactive motion uses **spring physics** rather than fixed durations.
 
-### MotionScheme
+It is layered:
+
+1. `ExpressiveMotionTokens` — raw durations and curves
+2. `ExpressiveMotionSpec` — tween presets (`quick`, `standard`, `enter`, `exit`, …)
+3. `ExpressiveMotionScheme` — spring presets (`standard`, `expressive`)
+4. `ExpressiveComponentMotion` — which spring each component uses by default
+
+### ExpressiveMotionScheme
 
 Two presets:
 
@@ -115,7 +124,7 @@ Two presets:
 ```dart
 // On an AnimationController
 controller.animateWithSpring(
-  MotionScheme.expressive.defaultSpatial,
+  ExpressiveMotionScheme.expressive.defaultSpatial,
   target: 1.0,
   velocity: dragVelocity,  // optional: feed gesture velocity
 );
@@ -126,13 +135,14 @@ controller.animateWithSpring(
 Each component type has a pre-assigned spring:
 
 ```dart
-ComponentMotion.button      // standard.fastSpatial
-ComponentMotion.card        // standard.defaultSpatial
-ComponentMotion.dialog      // expressive.fastSpatial
-ComponentMotion.bottomSheet // expressive.defaultSpatial
-ComponentMotion.hero        // expressive (full scheme)
-ComponentMotion.navigation  // standard (full scheme)
-ComponentMotion.shapeMorph  // expressive.defaultSpatial
+ExpressiveComponentMotion.button      // standard.fastSpatial
+ExpressiveComponentMotion.card        // standard.defaultSpatial
+ExpressiveComponentMotion.dialog      // expressive.fastSpatial
+ExpressiveComponentMotion.bottomSheet // expressive.defaultSpatial
+ExpressiveComponentMotion.hero        // expressive (full scheme)
+ExpressiveComponentMotion.navigation  // standard (full scheme)
+ExpressiveComponentMotion.shapeMorph  // expressive.defaultSpatial
+ExpressiveComponentMotion.carousel    // standard.slowSpatial (ExpressiveCarousel's default)
 ```
 
 ### Accessibility
@@ -141,10 +151,10 @@ The system respects `MediaQuery.disableAnimations`:
 
 ```dart
 // Returns Duration.zero if motion is disabled
-MotionAccessibility.adaptiveDuration(context, Duration(milliseconds: 400))
+ExpressiveMotionAccessibility.adaptiveDuration(context, Duration(milliseconds: 400))
 
 // Returns critically-damped (no bounce) if motion should be reduced
-MotionAccessibility.adaptiveSpring(context, MotionScheme.expressive.defaultSpatial)
+ExpressiveMotionAccessibility.adaptiveSpring(context, ExpressiveMotionScheme.expressive.defaultSpatial)
 ```
 
 ---
@@ -165,8 +175,8 @@ Each shape is a `List<Offset>` of 32 normalized points (x/y in 0..1 range). This
 ### Shape morphing
 
 ```dart
-// The ShapeMorph widget handles animation automatically
-ShapeMorph(
+// The ExpressiveShapeMorph widget handles animation automatically
+ExpressiveShapeMorph(
   shape: ExpressiveShapes.heart,  // change this reference → animates
   size: 100,
   color: Colors.red,
@@ -174,16 +184,16 @@ ShapeMorph(
 )
 ```
 
-Under the hood: `lerpShapePoints(shapeA, shapeB, t)` interpolates point-by-point.
+Under the hood: `ExpressiveShapes.lerp(shapeA, shapeB, t)` interpolates point-by-point.
 
 ### State-driven morphing
 
 ```dart
-StateMorphContainer(
+ExpressiveStateMorphContainer(
   isActive: _isSelected,
   activeShape: ExpressiveShapes.circle,
   inactiveShape: ExpressiveShapes.square,
-  spring: MotionScheme.expressive.defaultSpatial,
+  spring: ExpressiveMotionScheme.expressive.defaultSpatial,
   child: Icon(Icons.check),
 )
 ```
@@ -201,7 +211,7 @@ Standard `ColorScheme.fromSeed` produces muted palettes. M3 Expressive uses more
 ColorScheme.fromSeed(seedColor: Colors.blue)
 
 // Vibrant (M3 Expressive)
-VibrantColorScheme.fromSeed(seedColor: Colors.blue, saturationBoost: 0.2)
+ExpressiveVibrantColorScheme.fromSeed(seedColor: Colors.blue, saturationBoost: 0.2)
 ```
 
 ### Color harmonization
@@ -210,11 +220,11 @@ Makes custom colors feel cohesive with the theme:
 
 ```dart
 // Your brand red, shifted toward the seed hue
-final harmonizedRed = ColorHarmonization.harmonize(
+final harmonizedRed = ExpressiveColorHarmonization.harmonize(
   Color(0xFFFF0000), seedColor, amount: 0.2);
 
 // Full pair with container/onContainer
-final pair = ColorHarmonization.harmonizePair(
+final pair = ExpressiveColorHarmonization.harmonizePair(
   myBrandColor, seedColor, brightness: Brightness.light);
 // pair.color, pair.container, pair.onContainer
 ```
@@ -252,12 +262,12 @@ Directional shapes (arrows, fans) auto-flip in RTL contexts:
 
 ```dart
 // Automatically mirrors for RTL
-final shape = RtlShapes.directional(context, ExpressiveShapes.arrow);
+final shape = ExpressiveRtlShapes.directional(context, ExpressiveShapes.arrow);
 
 // Manual transforms
-RtlShapes.flipHorizontal(shape)
-RtlShapes.rotate(shape, 0.25)  // 90 degrees
-RtlShapes.scale(shape, 0.8)
+ExpressiveRtlShapes.flipHorizontal(shape)
+ExpressiveRtlShapes.rotate(shape, 0.25)  // 90 degrees
+ExpressiveRtlShapes.scale(shape, 0.8)
 ```
 
 ---
@@ -267,7 +277,7 @@ RtlShapes.scale(shape, 0.8)
 One call generates everything:
 
 ```dart
-final theme = ExpressiveTheme.fromSeed(
+final theme = ExpressiveThemeData.fromSeed(
   seedColor: Colors.deepOrange,
   shapeType: ExpressiveShapeType.organic,  // rounded, squircle, organic, full
   spacing: ExpressiveSpacingTokens.tablet,
@@ -299,13 +309,13 @@ These enhance existing widgets, not replace them.
 Apply all expressive styles at once:
 
 ```dart
-final themed = ExpressiveComponentThemes.applyExpressive(
+final themed = ExpressiveComponentThemes.apply(
   theme.materialTheme,
   coloredAppBar: true,
 );
 ```
 
-After this, standard Flutter widgets (FAB, NavigationBar, AppBar, Cards, IconButtons) automatically use expressive styling.
+After this, standard Flutter widgets (FAB, NavigationBar, AppBar, Cards, IconButtons, sliders, switches, pickers, …) automatically use expressive styling.
 
 ### New component types
 
@@ -316,9 +326,9 @@ After this, standard Flutter widgets (FAB, NavigationBar, AppBar, Cards, IconBut
 | `ExpressiveFloatingToolbar` | Pill-shaped floating action bar        |
 | `ExpressiveCarousel`        | Horizontal cards with peek and snap    |
 | `ExpressiveSearchBar`       | Collapses to icon, expands with spring |
-| `ContainedLoadingIndicator` | Segmented arc progress                 |
-| `StateMorphContainer`       | Shape-morphs on state change           |
-| `ShapeContainerTransform`   | Container expand with shape morph      |
+| `ExpressiveContainedLoadingIndicator` | Segmented arc progress                 |
+| `ExpressiveStateMorphContainer`       | Shape-morphs on state change           |
+| `ExpressiveShapeContainerTransform`   | Container expand with shape morph      |
 
 ### Expressive dialogs, sheets, snackbars
 
@@ -332,55 +342,27 @@ showExpressiveSnackBar(...)    // icon + shaped + floating
 
 ---
 
-## Templates
-
-Layout guidance for common screens. They compose standard Material widgets with proper spacing and structure:
-
-- `LoginTemplate` — auth screen with adaptive spacing
-- `ProfileTemplate` — avatar + stats + cover image
-- `DashboardTemplate` — adaptive metric grid
-- `ChatTemplate` + `ChatBubble` — messaging UI
-- `SettingsTemplate` — grouped settings sections
-- `SearchTemplate` — search with suggestions
-- `ListTemplate` — sectioned list with refresh
-- `MediaTemplate` — hero detail with related items
-- `ProductDetailTemplate` — commerce product page
-
----
-
 ## Dev Tools
 
-### SpacingOverlay
+### ExpressiveSpacingOverlay
 
 Renders an 8dp grid over your UI during development:
 
 ```dart
-SpacingOverlay(
+ExpressiveSpacingOverlay(
   enabled: kDebugMode,
   gridSize: 8,
   child: MyApp(),
 )
 ```
 
-### TokenInspector
+### ExpressiveTokenInspector
 
 A drawer that visualizes current token values (colors, spacing, radius):
 
 ```dart
-Scaffold(endDrawer: const TokenInspector())
+Scaffold(endDrawer: const ExpressiveTokenInspector())
 ```
-
----
-
-## What this does NOT do
-
-- Does not replace `ElevatedButton` with `ExpressiveButton`
-- Does not require you to use custom widgets
-- Does not break if you use standard Material alongside it
-- Does not add runtime overhead beyond what your animations need
-- Does not require specific fonts (but works better with variable fonts)
-
-Everything is opt-in and composable. Use the tokens, ignore the templates. Use the shapes, ignore the motion. Mix and match.
 
 ---
 
@@ -400,8 +382,8 @@ Wraps any `IconData` in a shaped container:
 ExpressiveIcon(Icons.favorite,
   size: ExpressiveIconSize.large,        // small, medium, large, extraLarge
   shapeType: ExpressiveShapeType.organic, // rounded, squircle, organic, full
-  containerColor: scheme.primaryContainer,
-  iconColor: scheme.onPrimaryContainer,
+  backgroundColor: scheme.primaryContainer,
+  foregroundColor: scheme.onPrimaryContainer,
 )
 ```
 
@@ -432,20 +414,20 @@ ExpressiveIcon(Icons.add,
 )
 ```
 
-### ExpressiveIconTheme
+### Icon theme
 
 Apply expressive icon styling globally through `IconTheme`:
 
 ```dart
 // Standard (outlined)
 IconTheme(
-  data: ExpressiveIconTheme.expressive(scheme: scheme, size: 24),
+  data: ExpressiveComponentThemes.iconTheme(scheme: scheme, size: 24),
   child: myWidget,
 )
 
 // Filled (for selected states) — sets fill=1, weight=700, grade=200
 IconTheme(
-  data: ExpressiveIconTheme.expressiveFilled(scheme: scheme),
+  data: ExpressiveComponentThemes.iconTheme(scheme: scheme, filled: true),
   child: myWidget,
 )
 ```
@@ -458,7 +440,7 @@ For the best experience, use the `material_symbols_icons` package:
 
 ```yaml
 dependencies:
-  material_expressive: ^0.9.0
+  material_expressive: ^0.10.0
   material_symbols_icons: ^4.0.0
 ```
 
@@ -471,7 +453,7 @@ ExpressiveIcon(Symbols.rocket_launch,
 )
 ```
 
-Our `ExpressiveIconTheme` sets the variable font axes (`opsz`, `wght`, `FILL`, `GRAD`) that Material Symbols responds to — so icons automatically look heavier when selected, lighter when inactive.
+`ExpressiveComponentThemes.iconTheme` sets the variable font axes (`opsz`, `wght`, `FILL`, `GRAD`) that Material Symbols responds to — so icons automatically look heavier when selected, lighter when inactive.
 
 ---
 
@@ -483,12 +465,12 @@ M3 Expressive introduces distinctive loading animations — wavy tracks, segment
 
 | Indicator                       | Best for                                           |
 | ------------------------------- | -------------------------------------------------- |
-| `WavyLinearProgressIndicator`   | File uploads, downloads, long operations (playful) |
-| `WavyCircularProgressIndicator` | Page loads, refresh actions (playful)              |
-| `ContainedLoadingIndicator`     | Partitioned/step progress, Chrome-style loading    |
-| `OrganicLoadingIndicator`       | Ambient loading, splash screens (organic feel)     |
-| `PulsingDotsIndicator`          | Chat typing indicators, waiting states             |
-| `MorphingShapeIndicator`        | Brand-forward loading, onboarding                  |
+| `ExpressiveWavyLinearProgressIndicator`   | File uploads, downloads, long operations (playful) |
+| `ExpressiveWavyCircularProgressIndicator` | Page loads, refresh actions (playful)              |
+| `ExpressiveContainedLoadingIndicator`     | Partitioned/step progress, Chrome-style loading    |
+| `ExpressiveOrganicLoadingIndicator`       | Ambient loading, splash screens (organic feel)     |
+| `ExpressivePulsingDotsIndicator`          | Chat typing indicators, waiting states             |
+| `ExpressiveMorphingShapeIndicator`        | Brand-forward loading, onboarding                  |
 
 ### Wavy Linear Progress
 
@@ -496,13 +478,13 @@ A sine wave replaces the flat progress track:
 
 ```dart
 // Determinate (shows progress)
-WavyLinearProgressIndicator(value: 0.65)
+ExpressiveWavyLinearProgressIndicator(value: 0.65)
 
 // Indeterminate (unknown duration)
-WavyLinearProgressIndicator()
+ExpressiveWavyLinearProgressIndicator()
 
 // Customized
-WavyLinearProgressIndicator(
+ExpressiveWavyLinearProgressIndicator(
   value: _progress,
   height: 8,
   waveAmplitude: 4,     // how tall the wave peaks are
@@ -518,13 +500,13 @@ The circular track undulates — the radius oscillates along the circumference:
 
 ```dart
 // Determinate
-WavyCircularProgressIndicator(value: 0.4)
+ExpressiveWavyCircularProgressIndicator(value: 0.4)
 
 // Indeterminate (rotating wave segment)
-WavyCircularProgressIndicator()
+ExpressiveWavyCircularProgressIndicator()
 
 // Customized
-WavyCircularProgressIndicator(
+ExpressiveWavyCircularProgressIndicator(
   size: 64,
   strokeWidth: 5,
   waveAmplitude: 3,    // how much the radius varies
@@ -537,7 +519,7 @@ WavyCircularProgressIndicator(
 Segmented arcs that fill progressively (like Chrome's new tab loading):
 
 ```dart
-ContainedLoadingIndicator(
+ExpressiveContainedLoadingIndicator(
   segments: 4,          // number of arc segments
   gapDegrees: 12,      // gap between segments
   size: 48,
@@ -550,7 +532,7 @@ ContainedLoadingIndicator(
 A cluster of soft circles orbiting each other:
 
 ```dart
-OrganicLoadingIndicator(
+ExpressiveOrganicLoadingIndicator(
   size: 48,
   blobCount: 3,
   color: scheme.primary,
@@ -562,7 +544,7 @@ OrganicLoadingIndicator(
 Classic typing/waiting indicator:
 
 ```dart
-PulsingDotsIndicator(
+ExpressivePulsingDotsIndicator(
   size: 48,
   dotCount: 3,
   color: scheme.primary,
@@ -574,7 +556,7 @@ PulsingDotsIndicator(
 A shape that continuously morphs between circle, square, and diamond:
 
 ```dart
-MorphingShapeIndicator(size: 48)
+ExpressiveMorphingShapeIndicator(size: 48)
 ```
 
 ### Theming
@@ -591,4 +573,4 @@ All indicators use `Theme.of(context).colorScheme.primary` by default — so the
 - Does not add runtime overhead beyond what your animations need
 - Does not require specific fonts (but works better with variable fonts)
 
-Everything is opt-in and composable. Use the tokens, ignore the templates. Use the shapes, ignore the motion. Mix and match.
+Everything is opt-in and composable. Use the tokens, ignore the components. Use the shapes, ignore the motion. Mix and match.

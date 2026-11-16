@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:material_expressive/material_expressive.dart';
+
 import 'pages/colors_page.dart';
 import 'pages/shapes_page.dart';
 import 'pages/motion_page.dart';
@@ -27,22 +28,20 @@ class _MaterialExpressiveDemoAppState extends State<MaterialExpressiveDemoApp> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ExpressiveTheme.fromSeed(
+    final theme = ExpressiveThemeData.fromSeed(
       seedColor: _seed,
       shapeType: _shape,
       vibrancy: _vibrancy,
       vibrantDarkMode: true,
     );
 
-    return ExpressiveThemeProvider(
-      themeData: theme,
+    return ExpressiveTheme(
+      data: theme,
       child: MaterialApp(
         title: 'Material Expressive Demo',
         debugShowCheckedModeBanner: false,
-        theme: ExpressiveComponentThemes.applyExpressive(theme.materialTheme),
-        darkTheme: ExpressiveComponentThemes.applyExpressive(
-          theme.materialDarkTheme,
-        ),
+        theme: ExpressiveComponentThemes.apply(theme.materialTheme),
+        darkTheme: ExpressiveComponentThemes.apply(theme.materialDarkTheme),
         themeMode: _dark ? ThemeMode.dark : ThemeMode.light,
         home: DemoHome(
           seed: _seed,
@@ -178,11 +177,13 @@ class _DemoHomeState extends State<DemoHome> {
               ],
             )
           : null,
-      endDrawer: _currentTab == 0 ? const TokenInspector() : null,
+      endDrawer: _currentTab == 0 ? const ExpressiveTokenInspector() : null,
       body: body,
       bottomNavigationBar: Theme(
         data: theme.copyWith(
-          navigationBarTheme: ExpressiveNavBarTheme.morphing(scheme: scheme),
+          navigationBarTheme: ExpressiveComponentThemes.navigationBarTheme(
+            scheme: scheme,
+          ),
         ),
         child: NavigationBar(
           selectedIndex: _currentTab,

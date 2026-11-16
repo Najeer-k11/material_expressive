@@ -1,12 +1,14 @@
 import 'package:material_ui/material_ui.dart';
 
+import 'color_harmonization.dart';
+
 /// Generates vibrant/expressive color schemes with boosted saturation
 /// and deliberate hue contrast between primary/secondary/tertiary.
 ///
 /// M3 Expressive uses more saturated tonal palettes and pushes
 /// secondary/tertiary hues further from the primary for vibrancy.
-class VibrantColorScheme {
-  VibrantColorScheme._();
+class ExpressiveVibrantColorScheme {
+  ExpressiveVibrantColorScheme._();
 
   /// Creates a vibrant [ColorScheme] from a seed color.
   ///
@@ -59,20 +61,17 @@ class VibrantColorScheme {
     );
   }
 
-  /// Harmonize a custom color toward the seed hue.
+  /// Deprecated: use [ExpressiveColorHarmonization.harmonize].
+  @Deprecated(
+    'Use ExpressiveColorHarmonization.harmonize instead. '
+    'Will be removed in 1.0.0.',
+  )
   static Color harmonize(Color color, Color seedColor, {double amount = 0.25}) {
-    final hsl = HSLColor.fromColor(color);
-    final seedHsl = HSLColor.fromColor(seedColor);
-    final hueDiff = _shortestHueDiff(hsl.hue, seedHsl.hue);
-    final newHue = (hsl.hue + hueDiff * amount) % 360;
-    return hsl.withHue(newHue < 0 ? newHue + 360 : newHue).toColor();
-  }
-
-  static double _shortestHueDiff(double from, double to) {
-    final diff = to - from;
-    if (diff > 180) return diff - 360;
-    if (diff < -180) return diff + 360;
-    return diff;
+    return ExpressiveColorHarmonization.harmonize(
+      color,
+      seedColor,
+      amount: amount,
+    );
   }
 
   /// Boost saturation. In dark mode, keep lightness in a controlled range
@@ -99,3 +98,10 @@ class VibrantColorScheme {
     return Color.lerp(surface, seed, amount)!;
   }
 }
+
+// ---- Deprecated aliases (removed in 1.0.0) ----
+
+@Deprecated(
+  'Use ExpressiveVibrantColorScheme instead. Will be removed in 1.0.0.',
+)
+typedef VibrantColorScheme = ExpressiveVibrantColorScheme;

@@ -51,11 +51,11 @@ class _MotionPageState extends State<MotionPage> with TickerProviderStateMixin {
             onPressed: () {
               _stdCtrl.forward(from: 0);
               _expCtrl.animateWithSpring(
-                MotionScheme.expressive.defaultSpatial,
+                ExpressiveMotionScheme.expressive.defaultSpatial,
                 target: 1.0,
               );
               _bounceCtrl.animateWithSpring(
-                MotionScheme.expressive.slowSpatial,
+                ExpressiveMotionScheme.expressive.slowSpatial,
                 target: 1.0,
               );
             },
@@ -75,14 +75,17 @@ class _MotionPageState extends State<MotionPage> with TickerProviderStateMixin {
           const SizedBox(height: 32),
 
           // SpringTransition
-          Text('SpringTransition', style: theme.textTheme.titleMedium),
+          Text(
+            'ExpressiveSpringTransition',
+            style: theme.textTheme.titleMedium,
+          ),
           const SizedBox(height: 8),
           Center(
             child: GestureDetector(
               onTap: () => setState(() => _springActive = !_springActive),
-              child: SpringTransition(
+              child: ExpressiveSpringTransition(
                 isActive: _springActive,
-                spring: MotionScheme.expressive.defaultSpatial,
+                spring: ExpressiveMotionScheme.expressive.defaultSpatial,
                 scaleActive: 1.35,
                 child: Container(
                   width: 96,
@@ -111,14 +114,14 @@ class _MotionPageState extends State<MotionPage> with TickerProviderStateMixin {
               onTap: () => setState(() => _morphActive = !_morphActive),
               child: Column(
                 children: [
-                  StateMorphContainer(
+                  ExpressiveStateMorphContainer(
                     isActive: _morphActive,
                     activeShape: ExpressiveShapes.circle,
                     inactiveShape: ExpressiveShapes.square,
                     activeColor: scheme.primary,
                     inactiveColor: scheme.surfaceContainerHigh,
                     size: 72,
-                    spring: MotionScheme.expressive.defaultSpatial,
+                    spring: ExpressiveMotionScheme.expressive.defaultSpatial,
                     child: Icon(
                       Icons.check,
                       color: _morphActive
@@ -146,8 +149,8 @@ class _MotionPageState extends State<MotionPage> with TickerProviderStateMixin {
           ),
           const SizedBox(height: 12),
           Center(
-            child: GestureSpringBox(
-              spring: MotionScheme.expressive.defaultSpatial,
+            child: ExpressiveGestureSpringBox(
+              spring: ExpressiveMotionScheme.expressive.defaultSpatial,
               maxOffset: 80,
               child: Container(
                 width: 120,

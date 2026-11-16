@@ -107,22 +107,25 @@ class _ComponentsPageState extends State<ComponentsPage> {
           Center(
             child: ExpressiveFloatingToolbar(
               items: [
-                FloatingToolbarItem(
+                ExpressiveFloatingToolbarItem(
                   icon: Icons.format_bold,
                   isSelected: true,
                   onPressed: () {},
                 ),
-                FloatingToolbarItem(
+                ExpressiveFloatingToolbarItem(
                   icon: Icons.format_italic,
                   onPressed: () {},
                 ),
-                FloatingToolbarItem(
+                ExpressiveFloatingToolbarItem(
                   icon: Icons.format_underline,
                   onPressed: () {},
                 ),
-                const FloatingToolbarItem.divider(),
-                FloatingToolbarItem(icon: Icons.link, onPressed: () {}),
-                FloatingToolbarItem(
+                const ExpressiveFloatingToolbarItem.divider(),
+                ExpressiveFloatingToolbarItem(
+                  icon: Icons.link,
+                  onPressed: () {},
+                ),
+                ExpressiveFloatingToolbarItem(
                   icon: Icons.settings,
                   isPrimary: true,
                   onPressed: () {},
@@ -143,9 +146,19 @@ class _ComponentsPageState extends State<ComponentsPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.photo_library, size: 28, color: scheme.onPrimaryContainer),
+                      Icon(
+                        Icons.photo_library,
+                        size: 28,
+                        color: scheme.onPrimaryContainer,
+                      ),
                       const SizedBox(height: 4),
-                      Text('First Page', style: TextStyle(color: scheme.onPrimaryContainer, fontSize: 12)),
+                      Text(
+                        'First Page',
+                        style: TextStyle(
+                          color: scheme.onPrimaryContainer,
+                          fontSize: 12,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -156,9 +169,19 @@ class _ComponentsPageState extends State<ComponentsPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.palette, size: 28, color: scheme.onSecondaryContainer),
+                      Icon(
+                        Icons.palette,
+                        size: 28,
+                        color: scheme.onSecondaryContainer,
+                      ),
                       const SizedBox(height: 4),
-                      Text('Second Page', style: TextStyle(color: scheme.onSecondaryContainer, fontSize: 12)),
+                      Text(
+                        'Second Page',
+                        style: TextStyle(
+                          color: scheme.onSecondaryContainer,
+                          fontSize: 12,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -169,9 +192,19 @@ class _ComponentsPageState extends State<ComponentsPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.bolt, size: 28, color: scheme.onTertiaryContainer),
+                      Icon(
+                        Icons.bolt,
+                        size: 28,
+                        color: scheme.onTertiaryContainer,
+                      ),
                       const SizedBox(height: 4),
-                      Text('Third Page', style: TextStyle(color: scheme.onTertiaryContainer, fontSize: 12)),
+                      Text(
+                        'Third Page',
+                        style: TextStyle(
+                          color: scheme.onTertiaryContainer,
+                          fontSize: 12,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -185,7 +218,7 @@ class _ComponentsPageState extends State<ComponentsPage> {
           Center(
             child: GestureDetector(
               onTap: () => setState(() => _morphActive = !_morphActive),
-              child: StateMorphContainer(
+              child: ExpressiveStateMorphContainer(
                 isActive: _morphActive,
                 activeShape: ExpressiveShapes.heart,
                 inactiveShape: ExpressiveShapes.circle,
@@ -194,7 +227,9 @@ class _ComponentsPageState extends State<ComponentsPage> {
                 size: 80,
                 child: Icon(
                   _morphActive ? Icons.favorite : Icons.favorite_border,
-                  color: _morphActive ? scheme.onPrimary : scheme.onSurfaceVariant,
+                  color: _morphActive
+                      ? scheme.onPrimary
+                      : scheme.onSurfaceVariant,
                   size: 32,
                 ),
               ),
@@ -260,7 +295,7 @@ class _ComponentsPageState extends State<ComponentsPage> {
                   ),
                   Column(
                     children: [
-                      BouncingIcon(
+                      ExpressiveBouncingIcon(
                         icon: Icons.favorite_border,
                         activeIcon: Icons.favorite,
                         isActive: _liked,
@@ -272,7 +307,7 @@ class _ComponentsPageState extends State<ComponentsPage> {
                   ),
                   Column(
                     children: [
-                      MorphingIcon(
+                      ExpressiveMorphingIcon(
                         icon: Icons.play_arrow,
                         activeIcon: Icons.pause,
                         isActive: _playing,
@@ -283,7 +318,7 @@ class _ComponentsPageState extends State<ComponentsPage> {
                   ),
                   Column(
                     children: [
-                      SelectionIcon(
+                      ExpressiveSelectionIcon(
                         isSelected: _selected,
                         onChanged: (v) => setState(() => _selected = v),
                       ),
@@ -301,16 +336,19 @@ class _ComponentsPageState extends State<ComponentsPage> {
           const Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _LoaderDemo('Contained', ContainedLoadingIndicator()),
-              _LoaderDemo('Organic', OrganicLoadingIndicator()),
-              _LoaderDemo('Pulsing', PulsingDotsIndicator()),
-              _LoaderDemo('Morphing', MorphingShapeIndicator()),
+              _LoaderDemo('Contained', ExpressiveContainedLoadingIndicator()),
+              _LoaderDemo('Organic', ExpressiveOrganicLoadingIndicator()),
+              _LoaderDemo('Pulsing', ExpressivePulsingDotsIndicator()),
+              _LoaderDemo('Morphing', ExpressiveMorphingShapeIndicator()),
             ],
           ),
           const SizedBox(height: 16),
-          WavyLinearProgressIndicator(color: scheme.primary),
+          ExpressiveWavyLinearProgressIndicator(color: scheme.primary),
           const SizedBox(height: 12),
-          WavyLinearProgressIndicator(value: 0.65, color: scheme.secondary),
+          ExpressiveWavyLinearProgressIndicator(
+            value: 0.65,
+            color: scheme.secondary,
+          ),
           const SizedBox(height: 24),
 
           // Surfaces
@@ -373,9 +411,8 @@ class _Title extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 10),
       child: Text(
         text,
-        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-          color: Theme.of(context).colorScheme.primary,
-        ),
+        style: Theme.of(context).textTheme.titleSmall
+            ?.copyWith(color: Theme.of(context).colorScheme.primary),
       ),
     );
   }

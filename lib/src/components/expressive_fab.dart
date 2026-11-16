@@ -1,5 +1,10 @@
 import 'package:material_ui/material_ui.dart';
+
+import '../tokens/motion_tokens.dart';
+import '../theme/expressive_theme.dart';
+
 import 'package:flutter/rendering.dart';
+
 import '../tokens/shape_tokens.dart';
 
 /// Size variants for the M3 Expressive FAB.
@@ -69,7 +74,7 @@ class _ExpressiveFabState extends State<ExpressiveFab>
     super.initState();
     _pressCtrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 100),
+      duration: ExpressiveMotionTokens.standard.durationExtraShort,
       reverseDuration: const Duration(milliseconds: 250),
     );
     _pressScale = Tween<double>(
@@ -140,6 +145,7 @@ class _ExpressiveFabState extends State<ExpressiveFab>
     final scheme = Theme.of(context).colorScheme;
     final bgColor = widget.backgroundColor ?? scheme.primaryContainer;
     final fgColor = widget.foregroundColor ?? scheme.onPrimaryContainer;
+    final tokens = ExpressiveTheme.of(context);
     final shapeTokens = ExpressiveShapeTokens(type: widget.shapeType);
     final shapeBorder = shapeTokens.shape(_containerSize * 0.4);
     final isExtended = widget.label != null && !_isScrolledDown;
@@ -152,7 +158,7 @@ class _ExpressiveFabState extends State<ExpressiveFab>
           if (widget.icon != null)
             Icon(widget.icon, size: _iconSize, color: fgColor),
           if (widget.icon != null && widget.label != null)
-            const SizedBox(width: 12),
+            SizedBox(width: tokens.spacing.md),
           if (widget.label != null)
             Text(
               widget.label!,
@@ -170,8 +176,8 @@ class _ExpressiveFabState extends State<ExpressiveFab>
     }
 
     Widget fab = AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOut,
+      duration: tokens.motion.durationMedium,
+      curve: tokens.motion.curveDecelerate,
       width: isExtended ? null : _containerSize,
       height: _containerSize,
       constraints: isExtended ? BoxConstraints(minWidth: _containerSize) : null,

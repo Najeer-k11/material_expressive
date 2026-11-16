@@ -1,5 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../theme/expressive_theme.dart';
+
 /// Shows an expressive bottom sheet with spring-based drag physics.
 Future<T?> showExpressiveBottomSheet<T>({
   required BuildContext context,
@@ -16,6 +18,7 @@ Future<T?> showExpressiveBottomSheet<T>({
   List<double>? snapSizes,
 }) {
   final scheme = Theme.of(context).colorScheme;
+  final tokens = ExpressiveTheme.of(context);
 
   return showModalBottomSheet<T>(
     context: context,
@@ -25,8 +28,10 @@ Future<T?> showExpressiveBottomSheet<T>({
     elevation: elevation ?? 2,
     shape:
         shape ??
-        const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(tokens.radius.xxl),
+          ),
         ),
     isScrollControlled: true,
     builder: (context) {
@@ -43,7 +48,7 @@ Future<T?> showExpressiveBottomSheet<T>({
             children: [
               // Drag handle
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
+                padding: EdgeInsets.symmetric(vertical: tokens.spacing.md),
                 child: Container(
                   width: 32,
                   height: 4,

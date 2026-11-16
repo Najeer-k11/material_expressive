@@ -1,5 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../theme/expressive_theme.dart';
+
 /// M3 Expressive split button.
 ///
 /// A single pill-shaped container with two sections:
@@ -15,7 +17,9 @@ class ExpressiveSplitButton extends StatelessWidget {
     required this.onDropdown,
     this.icon,
     this.dropdownIcon = Icons.arrow_drop_down,
-    this.cornerRadius = 28,
+    this.borderRadius,
+    @Deprecated('Use borderRadius instead. Will be removed in 1.0.0.')
+    this._cornerRadius,
     this.backgroundColor,
     this.foregroundColor,
     this.height = 48,
@@ -26,7 +30,15 @@ class ExpressiveSplitButton extends StatelessWidget {
   final VoidCallback onDropdown;
   final IconData? icon;
   final IconData dropdownIcon;
-  final double cornerRadius;
+
+  /// Corner radius of the outer ends. Defaults to the theme's `radius.xxl`.
+  final double? borderRadius;
+
+  final double? _cornerRadius;
+
+  @Deprecated('Use borderRadius instead. Will be removed in 1.0.0.')
+  double? get cornerRadius => borderRadius ?? _cornerRadius;
+
   final Color? backgroundColor;
   final Color? foregroundColor;
   final double height;
@@ -36,6 +48,8 @@ class ExpressiveSplitButton extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final bg = backgroundColor ?? scheme.primaryContainer;
     final fg = foregroundColor ?? scheme.onPrimaryContainer;
+    final tokens = ExpressiveTheme.of(context);
+    final cornerRadius = borderRadius ?? _cornerRadius ?? tokens.radius.xxl;
 
     return SizedBox(
       height: height,
@@ -61,7 +75,7 @@ class ExpressiveSplitButton extends StatelessWidget {
                     children: [
                       if (icon != null) ...[
                         Icon(icon, size: 20, color: fg),
-                        const SizedBox(width: 8),
+                        SizedBox(width: tokens.spacing.sm),
                       ],
                       Text(
                         label,

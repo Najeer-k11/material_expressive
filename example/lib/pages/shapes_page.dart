@@ -36,7 +36,7 @@ class _ShapesPageState extends State<ShapesPage> {
                     height: 56,
                     decoration: ShapeDecoration(
                       color: scheme.primaryContainer,
-                      shape: MorphableShapeBorder(
+                      shape: ExpressiveMorphableShapeBorder(
                         points: ExpressiveShapes.byName(name),
                       ),
                     ),
@@ -71,7 +71,7 @@ class _ShapesPageState extends State<ShapesPage> {
               ),
               child: Column(
                 children: [
-                  ShapeMorph(
+                  ExpressiveShapeMorph(
                     shape: ExpressiveShapes.byName(_allShapes[_morphIndex]),
                     size: 140,
                     color: scheme.primary,
@@ -110,7 +110,9 @@ class _ShapesPageState extends State<ShapesPage> {
                     height: 56,
                     decoration: ShapeDecoration(
                       color: scheme.secondaryContainer,
-                      shape: MorphableShapeBorder(points: ExpressiveShapes.arrow),
+                      shape: ExpressiveMorphableShapeBorder(
+                        points: ExpressiveShapes.arrow,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -124,8 +126,10 @@ class _ShapesPageState extends State<ShapesPage> {
                     height: 56,
                     decoration: ShapeDecoration(
                       color: scheme.tertiaryContainer,
-                      shape: MorphableShapeBorder(
-                        points: RtlShapes.flipHorizontal(ExpressiveShapes.arrow),
+                      shape: ExpressiveMorphableShapeBorder(
+                        points: ExpressiveRtlShapes.flipHorizontal(
+                          ExpressiveShapes.arrow,
+                        ),
                       ),
                     ),
                   ),
@@ -140,8 +144,11 @@ class _ShapesPageState extends State<ShapesPage> {
                     height: 56,
                     decoration: ShapeDecoration(
                       color: scheme.primaryContainer,
-                      shape: MorphableShapeBorder(
-                        points: RtlShapes.rotate(ExpressiveShapes.arrow, 0.25),
+                      shape: ExpressiveMorphableShapeBorder(
+                        points: ExpressiveRtlShapes.rotate(
+                          ExpressiveShapes.arrow,
+                          0.25,
+                        ),
                       ),
                     ),
                   ),
@@ -161,7 +168,9 @@ class _ShapesPageState extends State<ShapesPage> {
             children: [
               Material(
                 color: scheme.primary,
-                shape: MorphableShapeBorder(points: ExpressiveShapes.clover4Leaf),
+                shape: ExpressiveMorphableShapeBorder(
+                  points: ExpressiveShapes.clover4Leaf,
+                ),
                 clipBehavior: Clip.antiAlias,
                 child: const SizedBox(
                   width: 72,
@@ -173,7 +182,9 @@ class _ShapesPageState extends State<ShapesPage> {
               ),
               Material(
                 color: scheme.secondary,
-                shape: MorphableShapeBorder(points: ExpressiveShapes.sunny),
+                shape: ExpressiveMorphableShapeBorder(
+                  points: ExpressiveShapes.sunny,
+                ),
                 clipBehavior: Clip.antiAlias,
                 child: const SizedBox(
                   width: 72,
@@ -183,7 +194,9 @@ class _ShapesPageState extends State<ShapesPage> {
               ),
               Material(
                 color: scheme.tertiary,
-                shape: MorphableShapeBorder(points: ExpressiveShapes.heart),
+                shape: ExpressiveMorphableShapeBorder(
+                  points: ExpressiveShapes.heart,
+                ),
                 clipBehavior: Clip.antiAlias,
                 child: const SizedBox(
                   width: 72,

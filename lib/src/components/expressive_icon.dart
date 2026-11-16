@@ -1,6 +1,8 @@
 import 'package:material_ui/material_ui.dart';
+
 import '../tokens/shape_tokens.dart';
 import '../shapes/shape_morph.dart';
+import 'expressive_component_themes.dart';
 
 /// Size variants for expressive icons.
 enum ExpressiveIconSize {
@@ -26,8 +28,12 @@ class ExpressiveIcon extends StatelessWidget {
     this.icon, {
     super.key,
     this.size = ExpressiveIconSize.medium,
-    this.containerColor,
-    this.iconColor,
+    this.backgroundColor,
+    this.foregroundColor,
+    @Deprecated('Use backgroundColor instead. Will be removed in 1.0.0.')
+    this._containerColor,
+    @Deprecated('Use foregroundColor instead. Will be removed in 1.0.0.')
+    this._iconColor,
     this.shape,
     this.shapeType = ExpressiveShapeType.rounded,
     this.filled = true,
@@ -37,8 +43,21 @@ class ExpressiveIcon extends StatelessWidget {
 
   final IconData icon;
   final ExpressiveIconSize size;
-  final Color? containerColor;
-  final Color? iconColor;
+
+  /// Container color. Defaults to `primaryContainer`.
+  final Color? backgroundColor;
+
+  /// Icon color. Defaults to `onPrimaryContainer`.
+  final Color? foregroundColor;
+
+  final Color? _containerColor;
+  final Color? _iconColor;
+
+  @Deprecated('Use backgroundColor instead. Will be removed in 1.0.0.')
+  Color? get containerColor => backgroundColor ?? _containerColor;
+
+  @Deprecated('Use foregroundColor instead. Will be removed in 1.0.0.')
+  Color? get iconColor => foregroundColor ?? _iconColor;
 
   /// Custom shape points. Overrides [shapeType] if provided.
   final List<Offset>? shape;
@@ -76,12 +95,13 @@ class ExpressiveIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final bgColor = containerColor ?? scheme.primaryContainer;
-    final fgColor = iconColor ?? scheme.onPrimaryContainer;
+    final bgColor =
+        backgroundColor ?? _containerColor ?? scheme.primaryContainer;
+    final fgColor = foregroundColor ?? _iconColor ?? scheme.onPrimaryContainer;
 
     final ShapeBorder shapeBorder;
     if (shape != null) {
-      shapeBorder = MorphableShapeBorder(points: shape!);
+      shapeBorder = ExpressiveMorphableShapeBorder(points: shape!);
     } else {
       final tokens = ExpressiveShapeTokens(type: shapeType);
       shapeBorder = tokens.shape(_containerSize * 0.45);
@@ -125,40 +145,29 @@ class ExpressiveIcon extends StatelessWidget {
   }
 }
 
-/// Applies expressive icon theme globally.
-///
-/// Use with [IconTheme] or set on [ThemeData.iconTheme].
+/// Deprecated: use [ExpressiveComponentThemes.iconTheme].
+@Deprecated(
+  'Use ExpressiveComponentThemes.iconTheme instead. Will be removed in 1.0.0.',
+)
 class ExpressiveIconTheme {
   ExpressiveIconTheme._();
 
-  /// Icon theme with M3 Expressive defaults.
   static IconThemeData expressive({
     required ColorScheme scheme,
     double size = 24,
     double? opticalSize,
-  }) {
-    return IconThemeData(
-      color: scheme.onSurface,
-      size: size,
-      opticalSize: opticalSize ?? size,
-      grade: 0,
-      weight: 400,
-      fill: 0,
-    );
-  }
+  }) => ExpressiveComponentThemes.iconTheme(
+    scheme: scheme,
+    size: size,
+    opticalSize: opticalSize,
+  );
 
-  /// Filled icon variant (for selected states).
   static IconThemeData expressiveFilled({
     required ColorScheme scheme,
     double size = 24,
-  }) {
-    return IconThemeData(
-      color: scheme.onPrimaryContainer,
-      size: size,
-      opticalSize: size,
-      grade: 200,
-      weight: 700,
-      fill: 1,
-    );
-  }
+  }) => ExpressiveComponentThemes.iconTheme(
+    scheme: scheme,
+    size: size,
+    filled: true,
+  );
 }

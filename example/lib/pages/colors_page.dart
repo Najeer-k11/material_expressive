@@ -86,7 +86,9 @@ class ColorsPage extends StatelessWidget {
             Builder(
               builder: (context) {
                 final seed = scheme.primary;
-                final harmonized = ColorHarmonization.harmonizeAll(seed: seed);
+                final harmonized = ExpressiveColorHarmonization.harmonizeAll(
+                  seed: seed,
+                );
                 return _ColorGrid([
                   ('Success', harmonized.success, Colors.white),
                   ('Warning', harmonized.warning, Colors.white),
@@ -105,9 +107,8 @@ class ColorsPage extends StatelessWidget {
                       Container(
                         height: 56,
                         decoration: BoxDecoration(
-                          color: ColorScheme.fromSeed(
-                            seedColor: scheme.primary,
-                          ).primary,
+                          color: ColorScheme.fromSeed(seedColor: scheme.primary)
+                              .primary,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Center(
@@ -167,9 +168,8 @@ class _Section extends StatelessWidget {
         children: [
           Text(
             title,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: Theme.of(context).colorScheme.primary,
-            ),
+            style: Theme.of(context).textTheme.titleSmall
+                ?.copyWith(color: Theme.of(context).colorScheme.primary),
           ),
           const SizedBox(height: 10),
           ...children,

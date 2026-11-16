@@ -1,4 +1,7 @@
 import 'package:material_ui/material_ui.dart';
+
+import '../tokens/motion_tokens.dart';
+
 import '../tokens/state_tokens.dart';
 
 /// Adds expressive press-to-scale behavior to any widget.
@@ -27,21 +30,22 @@ class _ExpressiveStateLayerState extends State<ExpressiveStateLayer>
   late final AnimationController _controller;
   late final Animation<double> _scaleAnimation;
   static const _tokens = ExpressiveStateTokens.standard;
+  static const _motion = ExpressiveMotionTokens.standard;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 100),
-      reverseDuration: const Duration(milliseconds: 200),
+      duration: _motion.durationExtraShort,
+      reverseDuration: _motion.durationShort,
     );
     _scaleAnimation = Tween<double>(begin: 1.0, end: _tokens.pressedScale)
         .animate(
           CurvedAnimation(
             parent: _controller,
-            curve: Curves.easeOut,
-            reverseCurve: Curves.easeIn,
+            curve: _motion.curveDecelerate,
+            reverseCurve: _motion.curveAccelerate,
           ),
         );
   }

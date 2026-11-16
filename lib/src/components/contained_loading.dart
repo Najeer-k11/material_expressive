@@ -1,11 +1,12 @@
 import 'dart:math' as math;
+
 import 'package:material_ui/material_ui.dart';
 
 /// A contained/partitioned loading indicator (M3 Expressive).
 ///
 /// Shows segmented progress arcs instead of a single continuous indicator.
-class ContainedLoadingIndicator extends StatefulWidget {
-  const ContainedLoadingIndicator({
+class ExpressiveContainedLoadingIndicator extends StatefulWidget {
+  const ExpressiveContainedLoadingIndicator({
     super.key,
     this.size = 48,
     this.strokeWidth = 4,
@@ -23,10 +24,11 @@ class ContainedLoadingIndicator extends StatefulWidget {
   final Color? backgroundColor;
 
   @override
-  State<ContainedLoadingIndicator> createState() => _ContainedLoadingState();
+  State<ExpressiveContainedLoadingIndicator> createState() =>
+      _ContainedLoadingState();
 }
 
-class _ContainedLoadingState extends State<ContainedLoadingIndicator>
+class _ContainedLoadingState extends State<ExpressiveContainedLoadingIndicator>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
 
@@ -149,3 +151,10 @@ class _SegmentedArcPainter extends CustomPainter {
   @override
   bool shouldRepaint(_SegmentedArcPainter old) => progress != old.progress;
 }
+
+// ---- Deprecated aliases (removed in 1.0.0) ----
+
+@Deprecated(
+  'Use ExpressiveContainedLoadingIndicator instead. Will be removed in 1.0.0.',
+)
+typedef ContainedLoadingIndicator = ExpressiveContainedLoadingIndicator;

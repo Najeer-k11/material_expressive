@@ -1,22 +1,27 @@
 import 'package:material_ui/material_ui.dart';
+
 import 'motion_scheme.dart';
 
 /// Accessibility-aware motion utilities.
 ///
 /// Respects [MediaQuery.disableAnimations] and provides reduced-motion
 /// alternatives.
-class MotionAccessibility {
-  MotionAccessibility._();
+class ExpressiveMotionAccessibility {
+  ExpressiveMotionAccessibility._();
 
   /// Check if animations should be reduced.
   static bool shouldReduceMotion(BuildContext context) {
-    return MediaQuery.of(context).disableAnimations;
+    return MediaQuery.disableAnimationsOf(context);
   }
 
-  /// Get an appropriate duration — returns Duration.zero if motion is disabled.
-  static Duration adaptiveDuration(BuildContext context, Duration normal) {
-    if (shouldReduceMotion(context)) return Duration.zero;
-    return normal;
+  /// Returns [reduced] (default [Duration.zero]) if motion should be
+  /// reduced, otherwise [normal].
+  static Duration adaptiveDuration(
+    BuildContext context,
+    Duration normal, {
+    Duration reduced = Duration.zero,
+  }) {
+    return shouldReduceMotion(context) ? reduced : normal;
   }
 
   /// Get an appropriate spring — returns a critically-damped (no bounce)
@@ -41,13 +46,17 @@ class MotionAccessibility {
     return normal;
   }
 
-  /// Convenience: wrap a duration based on system setting.
-  /// Useful for AnimatedContainer, AnimatedOpacity, etc.
+  @Deprecated('Use adaptiveDuration instead. Will be removed in 1.0.0.')
   static Duration duration(
     BuildContext context, {
     Duration normal = const Duration(milliseconds: 300),
     Duration reduced = Duration.zero,
-  }) {
-    return shouldReduceMotion(context) ? reduced : normal;
-  }
+  }) => adaptiveDuration(context, normal, reduced: reduced);
 }
+
+// ---- Deprecated aliases (removed in 1.0.0) ----
+
+@Deprecated(
+  'Use ExpressiveMotionAccessibility instead. Will be removed in 1.0.0.',
+)
+typedef MotionAccessibility = ExpressiveMotionAccessibility;

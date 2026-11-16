@@ -1,9 +1,10 @@
 import 'dart:math' as math;
+
 import 'package:material_ui/material_ui.dart';
 
 /// Organic blob loading indicator.
-class OrganicLoadingIndicator extends StatefulWidget {
-  const OrganicLoadingIndicator({
+class ExpressiveOrganicLoadingIndicator extends StatefulWidget {
+  const ExpressiveOrganicLoadingIndicator({
     super.key,
     this.size = 48,
     this.color,
@@ -14,10 +15,11 @@ class OrganicLoadingIndicator extends StatefulWidget {
   final int blobCount;
 
   @override
-  State<OrganicLoadingIndicator> createState() => _OrganicLoadingState();
+  State<ExpressiveOrganicLoadingIndicator> createState() =>
+      _OrganicLoadingState();
 }
 
-class _OrganicLoadingState extends State<OrganicLoadingIndicator>
+class _OrganicLoadingState extends State<ExpressiveOrganicLoadingIndicator>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
 
@@ -91,8 +93,8 @@ class _BlobPainter extends CustomPainter {
 }
 
 /// Pulsing dots loading indicator.
-class PulsingDotsIndicator extends StatefulWidget {
-  const PulsingDotsIndicator({
+class ExpressivePulsingDotsIndicator extends StatefulWidget {
+  const ExpressivePulsingDotsIndicator({
     super.key,
     this.size = 48,
     this.color,
@@ -103,10 +105,10 @@ class PulsingDotsIndicator extends StatefulWidget {
   final int dotCount;
 
   @override
-  State<PulsingDotsIndicator> createState() => _PulsingDotsState();
+  State<ExpressivePulsingDotsIndicator> createState() => _PulsingDotsState();
 }
 
-class _PulsingDotsState extends State<PulsingDotsIndicator>
+class _PulsingDotsState extends State<ExpressivePulsingDotsIndicator>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
 
@@ -161,16 +163,21 @@ class _PulsingDotsState extends State<PulsingDotsIndicator>
 }
 
 /// Morphing shape loading indicator.
-class MorphingShapeIndicator extends StatefulWidget {
-  const MorphingShapeIndicator({super.key, this.size = 48, this.color});
+class ExpressiveMorphingShapeIndicator extends StatefulWidget {
+  const ExpressiveMorphingShapeIndicator({
+    super.key,
+    this.size = 48,
+    this.color,
+  });
   final double size;
   final Color? color;
 
   @override
-  State<MorphingShapeIndicator> createState() => _MorphingShapeState();
+  State<ExpressiveMorphingShapeIndicator> createState() =>
+      _MorphingShapeState();
 }
 
-class _MorphingShapeState extends State<MorphingShapeIndicator>
+class _MorphingShapeState extends State<ExpressiveMorphingShapeIndicator>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
 
@@ -219,3 +226,20 @@ class _MorphingShapeState extends State<MorphingShapeIndicator>
     );
   }
 }
+
+// ---- Deprecated aliases (removed in 1.0.0) ----
+
+@Deprecated(
+  'Use ExpressiveOrganicLoadingIndicator instead. Will be removed in 1.0.0.',
+)
+typedef OrganicLoadingIndicator = ExpressiveOrganicLoadingIndicator;
+
+@Deprecated(
+  'Use ExpressivePulsingDotsIndicator instead. Will be removed in 1.0.0.',
+)
+typedef PulsingDotsIndicator = ExpressivePulsingDotsIndicator;
+
+@Deprecated(
+  'Use ExpressiveMorphingShapeIndicator instead. Will be removed in 1.0.0.',
+)
+typedef MorphingShapeIndicator = ExpressiveMorphingShapeIndicator;

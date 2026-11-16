@@ -1,5 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../theme/expressive_theme.dart';
+
 /// Shows an expressive snackbar with icon, shape, and spring dismiss.
 void showExpressiveSnackBar(
   BuildContext context, {
@@ -8,11 +10,12 @@ void showExpressiveSnackBar(
   String? actionLabel,
   VoidCallback? onAction,
   Duration duration = const Duration(seconds: 4),
-  double borderRadius = 16,
+  double? borderRadius,
   Color? backgroundColor,
   Color? textColor,
 }) {
   final scheme = Theme.of(context).colorScheme;
+  final tokens = ExpressiveTheme.of(context);
 
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
@@ -20,14 +23,14 @@ void showExpressiveSnackBar(
       duration: duration,
       backgroundColor: backgroundColor ?? scheme.inverseSurface,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(borderRadius),
+        borderRadius: BorderRadius.circular(borderRadius ?? tokens.radius.lg),
       ),
-      margin: const EdgeInsets.all(16),
+      margin: EdgeInsets.all(tokens.spacing.lg),
       content: Row(
         children: [
           if (icon != null) ...[
             Icon(icon, color: textColor ?? scheme.onInverseSurface, size: 20),
-            const SizedBox(width: 12),
+            SizedBox(width: tokens.spacing.md),
           ],
           Expanded(
             child: Text(

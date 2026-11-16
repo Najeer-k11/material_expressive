@@ -1,5 +1,100 @@
 # Changelog
 
+## 0.10.0
+
+### API consistency pass
+
+Every rename below keeps the old name as a `@Deprecated` alias or forwarder,
+so 0.9.x code still compiles (with deprecation hints). The aliases will be
+removed in **1.0.0**.
+
+#### Naming — every public type now starts with `Expressive`
+
+| Old | New |
+| --- | --- |
+| `RotatingIcon`, `BouncingIcon`, `MorphingIcon`, `HoverIcon`, `SelectionIcon` | `Expressive…` (same suffix) |
+| `ContainedLoadingIndicator`, `OrganicLoadingIndicator`, `PulsingDotsIndicator`, `MorphingShapeIndicator` | `Expressive…` |
+| `WavyLinearProgressIndicator`, `WavyCircularProgressIndicator` | `Expressive…` |
+| `StateMorphContainer`, `FloatingToolbarItem` | `Expressive…` |
+| `ContentWidth`, `AdaptiveGap`, `PageMargins`, `Adaptive`, `DeviceType`, `WindowSizeClass` | `Expressive…` |
+| `MotionScheme`, `MotionSpec`, `ComponentMotion`, `MotionAccessibility`, `SpringTransition`, `GestureSpringBox`, `ShapeContainerTransform` | `Expressive…` |
+| `ShapeMorph`, `MorphableShapeBorder`, `SquircleBorder`, `OrganicBorder`, `RtlShapes` | `Expressive…` |
+| `ColorFromImage`, `ColorHarmonization`, `HarmonizedColors`, `HarmonizedColorPair`, `VibrantColorScheme` | `Expressive…` |
+| `SpacingOverlay`, `TokenInspector` | `Expressive…` |
+| `SpringAnimationExt` (extension) | `ExpressiveSpringAnimation` (no alias; only matters for explicit extension calls) |
+
+#### Theme — now mirrors Flutter's `Theme` / `ThemeData`
+
+| Old | New |
+| --- | --- |
+| `ExpressiveTheme.fromSeed(...)` | `ExpressiveThemeData.fromSeed(...)` |
+| `ExpressiveThemeProvider(themeData: d, child: c)` | `ExpressiveTheme(data: d, child: c)` |
+| `ExpressiveThemeProvider.of(context)` | `ExpressiveTheme.of(context)` |
+
+`ExpressiveTheme.of` no longer asserts when there is no ancestor; it falls
+back to `ExpressiveThemeData.fallback(Theme.of(context))` (standard tokens on
+the ambient Material theme). `maybeOf` still returns null.
+
+#### Duplicate APIs merged
+
+| Old | New |
+| --- | --- |
+| `ExpressiveInputThemes.expressiveSlider()` etc. | `ExpressiveComponentThemes.sliderTheme()` etc. |
+| `ExpressiveComponentThemes.expressiveFab/NavBar/AppBar/IconButton/CarouselCard()` | `floatingActionButtonTheme` / `navigationBarTheme` / `appBarTheme` / `iconButtonTheme` / `cardTheme` |
+| `ExpressiveComponentThemes.applyExpressive()` | `ExpressiveComponentThemes.apply()` |
+| `ExpressiveInputThemes.applyAll()` | `ExpressiveComponentThemes.apply()` (applies inputs too) |
+| `ExpressiveIconTheme.expressive()` / `.expressiveFilled()` | `ExpressiveComponentThemes.iconTheme(filled: …)` |
+| `ExpressiveNavBarTheme.morphing()` | `ExpressiveComponentThemes.navigationBarTheme()` |
+| `VibrantColorScheme.harmonize()` | `ExpressiveColorHarmonization.harmonize()` |
+| `ExpressiveMotion.quick` etc. | `ExpressiveMotionSpec.quick` etc. |
+| `MotionAccessibility.duration(context, normal:, reduced:)` | `ExpressiveMotionAccessibility.adaptiveDuration(context, normal, reduced:)` |
+| `smoothPathFromScaled()`, `lerpShapePoints()` | `ExpressiveShapes.smoothPath()`, `ExpressiveShapes.lerp()` |
+| `ExpressiveBuildContext` + `ExpressiveTokenContext` extensions | one `ExpressiveContext` extension (also exported from `theme.dart`) |
+| `context.brightness` | `context.platformBrightness` |
+| `ExpressiveStateTokens.disabledOpacity` | `ExpressiveOpacityTokens.disabled` |
+
+`ExpressiveAdaptive` (formerly `Adaptive`) and the layout helpers now derive
+breakpoints from `ExpressiveBreakpointTokens` instead of hardcoded 600/1200
+(same values). New: `context.windowSizeClass`, `context.deviceType`,
+`context.reduceMotion`, `ExpressiveAdaptive.windowSizeClass()`,
+`ExpressiveSpacingTokens.standard`.
+
+#### Parameter names
+
+| Widget | Old | New |
+| --- | --- | --- |
+| `ExpressiveButtonGroup`, `ExpressiveSplitButton` | `cornerRadius` | `borderRadius` |
+| `ExpressiveButtonGroup`, `ExpressiveWavy*ProgressIndicator` | `animationDuration` | `duration` |
+| `ExpressiveIcon` | `containerColor`, `iconColor` | `backgroundColor`, `foregroundColor` |
+
+#### Components read tokens
+
+Defaults that matched a token are now nullable and resolve from
+`ExpressiveTheme.of(context)`, so a custom `ExpressiveThemeData` restyles the
+package's own components: dialog, bottom sheet, snackbar, search bar, surface,
+carousel, button group, split button, floating toolbar and FAB radii /
+spacing / elevation / durations. `ExpressiveShapeTokens` sizes (`xs`…`xxl`) now
+come from `ExpressiveRadiusTokens` (new `radius` field). With standard tokens
+every value is the same as before.
+
+Spring defaults now come from the motion scheme:
+`ExpressiveCarousel.spring` → `ExpressiveComponentMotion.carousel`, and
+`ExpressiveGestureSpringBox` / `ExpressiveSpringTransition` →
+`ExpressiveMotionScheme.expressive.defaultSpatial` (same values as before).
+`ExpressiveComponentMotion.carousel` was corrected to `standard.slowSpatial`
+to match what the carousel actually uses.
+
+#### Visual changes
+
+- `ExpressiveNavBarTheme.morphing()` (deprecated) now also sets the rounded
+  indicator shape, as `navigationBarTheme()` always did.
+
+#### Docs
+
+- Removed references to screen templates and `templates.dart` (removed in 0.8.0).
+- Removed a duplicated "What this does NOT do" section from the guide.
+- Library docs list every sub-library and describe the motion layers.
+
 ## 0.9.0
 
 ### Migrated to the decoupled Material library (`material_ui`)

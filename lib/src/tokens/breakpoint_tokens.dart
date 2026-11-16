@@ -24,19 +24,24 @@ class ExpressiveBreakpointTokens {
 }
 
 /// Window size class.
-enum WindowSizeClass {
+enum ExpressiveWindowSizeClass {
   compact,
   medium,
   expanded,
   large,
   extraLarge;
 
-  static WindowSizeClass fromWidth(double width) {
+  static ExpressiveWindowSizeClass fromWidth(double width) {
     const bp = ExpressiveBreakpointTokens.standard;
-    if (width >= bp.extraLarge) return WindowSizeClass.extraLarge;
-    if (width >= bp.large) return WindowSizeClass.large;
-    if (width >= bp.expanded) return WindowSizeClass.expanded;
-    if (width >= bp.medium) return WindowSizeClass.medium;
-    return WindowSizeClass.compact;
+    if (width >= bp.extraLarge) return ExpressiveWindowSizeClass.extraLarge;
+    if (width >= bp.large) return ExpressiveWindowSizeClass.large;
+    if (width >= bp.expanded) return ExpressiveWindowSizeClass.expanded;
+    if (width >= bp.medium) return ExpressiveWindowSizeClass.medium;
+    return ExpressiveWindowSizeClass.compact;
   }
 }
+
+// ---- Deprecated aliases (removed in 1.0.0) ----
+
+@Deprecated('Use ExpressiveWindowSizeClass instead. Will be removed in 1.0.0.')
+typedef WindowSizeClass = ExpressiveWindowSizeClass;

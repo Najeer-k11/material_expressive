@@ -1,5 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../theme/expressive_theme.dart';
+
 /// Shows an expressive dialog with scale+fade entry animation.
 Future<T?> showExpressiveDialog<T>({
   required BuildContext context,
@@ -34,26 +36,35 @@ class ExpressiveAlertDialog extends StatelessWidget {
     this.title,
     this.content,
     this.actions = const [],
-    this.borderRadius = 28,
+    this.borderRadius,
   });
 
   final Widget? icon;
   final Widget? title;
   final Widget? content;
   final List<Widget> actions;
-  final double borderRadius;
+
+  /// Corner radius. Defaults to the theme's `radius.xxl`.
+  final double? borderRadius;
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final tokens = ExpressiveTheme.of(context);
+    final spacing = tokens.spacing;
 
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(borderRadius),
+        borderRadius: BorderRadius.circular(borderRadius ?? tokens.radius.xxl),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+        padding: EdgeInsets.fromLTRB(
+          spacing.xl,
+          spacing.xl,
+          spacing.xl,
+          spacing.lg,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -62,7 +73,7 @@ class ExpressiveAlertDialog extends StatelessWidget {
                 data: IconThemeData(color: scheme.secondary, size: 24),
                 child: icon!,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: spacing.lg),
             ],
             if (title != null) ...[
               DefaultTextStyle(
@@ -72,7 +83,7 @@ class ExpressiveAlertDialog extends StatelessWidget {
                 textAlign: TextAlign.center,
                 child: title!,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: spacing.lg),
             ],
             if (content != null) ...[
               DefaultTextStyle(
@@ -81,14 +92,14 @@ class ExpressiveAlertDialog extends StatelessWidget {
                 ),
                 child: content!,
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: spacing.xl),
             ],
             if (actions.isNotEmpty)
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children:
                     actions
-                        .expand((a) => [a, const SizedBox(width: 8)])
+                        .expand((a) => [a, SizedBox(width: spacing.sm)])
                         .toList()
                       ..removeLast(),
               ),

@@ -11,6 +11,10 @@ class ExpressiveSpacingTokens {
     required this.xxxl,
   });
 
+  /// The default scale (same as [phone]). Matches the `standard` constant
+  /// on the other token classes.
+  static const standard = phone;
+
   static const phone = ExpressiveSpacingTokens(
     xxs: 2,
     xs: 4,

@@ -1,8 +1,8 @@
 import 'package:material_ui/material_ui.dart';
 
 /// An overlay that visualizes spacing grid.
-class SpacingOverlay extends StatelessWidget {
-  const SpacingOverlay({
+class ExpressiveSpacingOverlay extends StatelessWidget {
+  const ExpressiveSpacingOverlay({
     super.key,
     required this.child,
     this.enabled = true,
@@ -28,9 +28,8 @@ class SpacingOverlay extends StatelessWidget {
                 gridSize: gridSize,
                 color:
                     gridColor ??
-                    Theme.of(
-                      context,
-                    ).colorScheme.primary.withValues(alpha: 0.1),
+                    Theme.of(context).colorScheme.primary
+                        .withValues(alpha: 0.1),
               ),
             ),
           ),
@@ -62,3 +61,8 @@ class _GridPainter extends CustomPainter {
   bool shouldRepaint(_GridPainter old) =>
       gridSize != old.gridSize || color != old.color;
 }
+
+// ---- Deprecated aliases (removed in 1.0.0) ----
+
+@Deprecated('Use ExpressiveSpacingOverlay instead. Will be removed in 1.0.0.')
+typedef SpacingOverlay = ExpressiveSpacingOverlay;

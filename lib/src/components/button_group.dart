@@ -1,5 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../theme/expressive_theme.dart';
+
 /// M3 Expressive connected button group.
 ///
 /// Rules:
@@ -16,22 +18,42 @@ class ExpressiveButtonGroup extends StatelessWidget {
     this.selectedIndex,
     this.onSelected,
     this.height = 48,
-    this.cornerRadius = 28,
+    this.borderRadius,
+    @Deprecated('Use borderRadius instead. Will be removed in 1.0.0.')
+    this._cornerRadius,
     this.backgroundColor,
     this.selectedColor,
-    this.animationDuration = const Duration(milliseconds: 200),
+    this.duration,
+    @Deprecated('Use duration instead. Will be removed in 1.0.0.')
+    this._animationDuration,
   });
 
   final List<ExpressiveButtonGroupItem> buttons;
   final int? selectedIndex;
   final ValueChanged<int>? onSelected;
   final double height;
-  final double cornerRadius;
+
+  /// Corner radius of the group ends. Defaults to the theme's `radius.xxl`.
+  final double? borderRadius;
+
+  final double? _cornerRadius;
+
+  @Deprecated('Use borderRadius instead. Will be removed in 1.0.0.')
+  double? get cornerRadius => borderRadius ?? _cornerRadius;
+
   final Color? backgroundColor;
   final Color? selectedColor;
-  final Duration animationDuration;
 
-  BorderRadius _radius(int i, bool isSelected) {
+  /// Selection animation duration. Defaults to the theme's
+  /// `motion.durationShort`.
+  final Duration? duration;
+
+  final Duration? _animationDuration;
+
+  @Deprecated('Use duration instead. Will be removed in 1.0.0.')
+  Duration? get animationDuration => duration ?? _animationDuration;
+
+  BorderRadius _radius(int i, bool isSelected, double cornerRadius) {
     if (isSelected) {
       return BorderRadius.circular(cornerRadius);
     }
@@ -51,6 +73,10 @@ class ExpressiveButtonGroup extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final bgColor = backgroundColor ?? scheme.surfaceContainerHigh;
     final selColor = selectedColor ?? scheme.primaryContainer;
+    final tokens = ExpressiveTheme.of(context);
+    final cornerRadius = borderRadius ?? _cornerRadius ?? tokens.radius.xxl;
+    final animDuration =
+        duration ?? _animationDuration ?? tokens.motion.durationShort;
 
     return SizedBox(
       height: height,
@@ -62,55 +88,55 @@ class ExpressiveButtonGroup extends StatelessWidget {
           children: List.generate(buttons.length, (i) {
             final isSelected = selectedIndex == i;
             final item = buttons[i];
-            final br = _radius(i, isSelected);
-      
-          return GestureDetector(
-            onTap: () => onSelected?.call(i),
-            child: AnimatedContainer(
-              duration: animationDuration,
-              curve: Curves.easeOut,
-              decoration: BoxDecoration(
-                color: isSelected ? selColor : bgColor,
-                borderRadius: br,
-              ),
-              padding: EdgeInsets.symmetric(
-                horizontal: isSelected ? 20 : 16,
-                vertical: 0,
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (item.icon != null) ...[
-                    Icon(
-                      item.icon,
-                      size: 17,
-                      color: isSelected
-                          ? scheme.onPrimaryContainer
-                          : scheme.onSurfaceVariant,
+            final br = _radius(i, isSelected, cornerRadius);
+
+            return GestureDetector(
+              onTap: () => onSelected?.call(i),
+              child: AnimatedContainer(
+                duration: animDuration,
+                curve: Curves.easeOut,
+                decoration: BoxDecoration(
+                  color: isSelected ? selColor : bgColor,
+                  borderRadius: br,
+                ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: isSelected ? 20 : tokens.spacing.lg,
+                  vertical: 0,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (item.icon != null) ...[
+                      Icon(
+                        item.icon,
+                        size: 17,
+                        color: isSelected
+                            ? scheme.onPrimaryContainer
+                            : scheme.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 6),
+                    ],
+                    Text(
+                      item.label,
+                      style: TextStyle(
+                        color: isSelected
+                            ? scheme.onPrimaryContainer
+                            : scheme.onSurfaceVariant,
+                        fontWeight: isSelected
+                            ? FontWeight.w600
+                            : FontWeight.w500,
+                        fontSize: 14,
+                      ),
                     ),
-                    const SizedBox(width: 6),
                   ],
-                  Text(
-                    item.label,
-                    style: TextStyle(
-                      color: isSelected
-                          ? scheme.onPrimaryContainer
-                          : scheme.onSurfaceVariant,
-                      fontWeight: isSelected
-                          ? FontWeight.w600
-                          : FontWeight.w500,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          );
-        }),
+            );
+          }),
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 }
 
 class ExpressiveButtonGroupItem {

@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+
 import 'package:material_ui/material_ui.dart';
 
 /// An icon that animates between two states using AnimatedIconData.
@@ -78,8 +79,8 @@ class _ExpressiveAnimatedIconState extends State<ExpressiveAnimatedIcon>
 }
 
 /// An icon that rotates when toggled.
-class RotatingIcon extends StatefulWidget {
-  const RotatingIcon({
+class ExpressiveRotatingIcon extends StatefulWidget {
+  const ExpressiveRotatingIcon({
     super.key,
     required this.icon,
     this.isRotated = false,
@@ -101,10 +102,10 @@ class RotatingIcon extends StatefulWidget {
   final VoidCallback? onPressed;
 
   @override
-  State<RotatingIcon> createState() => _RotatingIconState();
+  State<ExpressiveRotatingIcon> createState() => _RotatingIconState();
 }
 
-class _RotatingIconState extends State<RotatingIcon>
+class _RotatingIconState extends State<ExpressiveRotatingIcon>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
   late final Animation<double> _rotation;
@@ -124,7 +125,7 @@ class _RotatingIconState extends State<RotatingIcon>
   }
 
   @override
-  void didUpdateWidget(RotatingIcon old) {
+  void didUpdateWidget(ExpressiveRotatingIcon old) {
     super.didUpdateWidget(old);
     if (widget.isRotated != old.isRotated) {
       widget.isRotated ? _ctrl.forward() : _ctrl.reverse();
@@ -155,8 +156,8 @@ class _RotatingIconState extends State<RotatingIcon>
 }
 
 /// An icon that bounces when toggled.
-class BouncingIcon extends StatefulWidget {
-  const BouncingIcon({
+class ExpressiveBouncingIcon extends StatefulWidget {
+  const ExpressiveBouncingIcon({
     super.key,
     required this.icon,
     this.activeIcon,
@@ -178,10 +179,10 @@ class BouncingIcon extends StatefulWidget {
   final VoidCallback? onPressed;
 
   @override
-  State<BouncingIcon> createState() => _BouncingIconState();
+  State<ExpressiveBouncingIcon> createState() => _BouncingIconState();
 }
 
-class _BouncingIconState extends State<BouncingIcon>
+class _BouncingIconState extends State<ExpressiveBouncingIcon>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
   late final Animation<double> _scale;
@@ -198,7 +199,7 @@ class _BouncingIconState extends State<BouncingIcon>
   }
 
   @override
-  void didUpdateWidget(BouncingIcon old) {
+  void didUpdateWidget(ExpressiveBouncingIcon old) {
     super.didUpdateWidget(old);
     if (widget.isActive != old.isActive) _ctrl.forward(from: 0);
   }
@@ -231,8 +232,8 @@ class _BouncingIconState extends State<BouncingIcon>
 }
 
 /// Cross-fade morph between two icons.
-class MorphingIcon extends StatelessWidget {
-  const MorphingIcon({
+class ExpressiveMorphingIcon extends StatelessWidget {
+  const ExpressiveMorphingIcon({
     super.key,
     required this.icon,
     required this.activeIcon,
@@ -279,8 +280,8 @@ class MorphingIcon extends StatelessWidget {
 }
 
 /// Hover scale icon (desktop).
-class HoverIcon extends StatefulWidget {
-  const HoverIcon({
+class ExpressiveHoverIcon extends StatefulWidget {
+  const ExpressiveHoverIcon({
     super.key,
     required this.icon,
     this.size = 24,
@@ -302,10 +303,10 @@ class HoverIcon extends StatefulWidget {
   final String? tooltip;
 
   @override
-  State<HoverIcon> createState() => _HoverIconState();
+  State<ExpressiveHoverIcon> createState() => _HoverIconState();
 }
 
-class _HoverIconState extends State<HoverIcon> {
+class _HoverIconState extends State<ExpressiveHoverIcon> {
   bool _hovered = false;
 
   @override
@@ -335,8 +336,8 @@ class _HoverIconState extends State<HoverIcon> {
 }
 
 /// Selection icon with elastic animation.
-class SelectionIcon extends StatefulWidget {
-  const SelectionIcon({
+class ExpressiveSelectionIcon extends StatefulWidget {
+  const ExpressiveSelectionIcon({
     super.key,
     this.isSelected = false,
     this.icon = Icons.check_circle,
@@ -358,10 +359,10 @@ class SelectionIcon extends StatefulWidget {
   final ValueChanged<bool>? onChanged;
 
   @override
-  State<SelectionIcon> createState() => _SelectionIconState();
+  State<ExpressiveSelectionIcon> createState() => _SelectionIconState();
 }
 
-class _SelectionIconState extends State<SelectionIcon>
+class _SelectionIconState extends State<ExpressiveSelectionIcon>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
   late final Animation<double> _scale;
@@ -381,7 +382,7 @@ class _SelectionIconState extends State<SelectionIcon>
   }
 
   @override
-  void didUpdateWidget(SelectionIcon old) {
+  void didUpdateWidget(ExpressiveSelectionIcon old) {
     super.didUpdateWidget(old);
     if (widget.isSelected != old.isSelected) {
       widget.isSelected ? _ctrl.forward() : _ctrl.reverse();
@@ -415,3 +416,20 @@ class _SelectionIconState extends State<SelectionIcon>
     );
   }
 }
+
+// ---- Deprecated aliases (removed in 1.0.0) ----
+
+@Deprecated('Use ExpressiveRotatingIcon instead. Will be removed in 1.0.0.')
+typedef RotatingIcon = ExpressiveRotatingIcon;
+
+@Deprecated('Use ExpressiveBouncingIcon instead. Will be removed in 1.0.0.')
+typedef BouncingIcon = ExpressiveBouncingIcon;
+
+@Deprecated('Use ExpressiveMorphingIcon instead. Will be removed in 1.0.0.')
+typedef MorphingIcon = ExpressiveMorphingIcon;
+
+@Deprecated('Use ExpressiveHoverIcon instead. Will be removed in 1.0.0.')
+typedef HoverIcon = ExpressiveHoverIcon;
+
+@Deprecated('Use ExpressiveSelectionIcon instead. Will be removed in 1.0.0.')
+typedef SelectionIcon = ExpressiveSelectionIcon;

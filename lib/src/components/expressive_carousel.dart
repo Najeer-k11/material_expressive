@@ -1,6 +1,11 @@
 import 'dart:async';
 import 'dart:ui' show lerpDouble;
+
 import 'package:material_ui/material_ui.dart';
+
+import '../motion/component_motion.dart';
+import '../theme/expressive_theme.dart';
+
 import '../motion/motion_scheme.dart';
 
 /// An expressive page scroll physics that overrides snapping spring physics.
@@ -33,12 +38,12 @@ class ExpressiveCarousel extends StatefulWidget {
     required this.items,
     this.height = 200,
     this.viewportFraction = 0.85,
-    this.borderRadius = 24,
-    this.spacing = 12,
+    this.borderRadius,
+    this.spacing,
     this.onPageChanged,
     this.initialPage = 0,
     this.showIndicator = true,
-    this.spring = const ExpressiveSpring(stiffness: 300, dampingRatio: 0.9),
+    this.spring,
     this.controller,
     this.loop = true,
     this.autoPlay = false,
@@ -50,8 +55,12 @@ class ExpressiveCarousel extends StatefulWidget {
   final List<Widget> items;
   final double height;
   final double viewportFraction;
-  final double borderRadius;
-  final double spacing;
+
+  /// Corner radius of the centered item. Defaults to the theme's `radius.xl`.
+  final double? borderRadius;
+
+  /// Gap between items. Defaults to the theme's `spacing.md`.
+  final double? spacing;
   final ValueChanged<int>? onPageChanged;
 
   /// The initial page index of the carousel.
@@ -61,7 +70,9 @@ class ExpressiveCarousel extends StatefulWidget {
   final bool showIndicator;
 
   /// The spring physics configuration used for page snapping.
-  final ExpressiveSpring spring;
+  ///
+  /// Defaults to [ExpressiveComponentMotion.carousel].
+  final ExpressiveSpring? spring;
 
   /// An optional external [PageController] to programmatically control the carousel.
   final PageController? controller;
@@ -123,13 +134,17 @@ class _ExpressiveCarouselState extends State<ExpressiveCarousel> {
   @override
   void didUpdateWidget(ExpressiveCarousel oldWidget) {
     super.didUpdateWidget(oldWidget);
-    
+
     final controllerChanged = widget.controller != oldWidget.controller;
     final loopChanged = widget.loop != oldWidget.loop;
     final initialPageChanged = widget.initialPage != oldWidget.initialPage;
-    final viewportFractionChanged = widget.viewportFraction != oldWidget.viewportFraction;
+    final viewportFractionChanged =
+        widget.viewportFraction != oldWidget.viewportFraction;
 
-    if (controllerChanged || loopChanged || initialPageChanged || viewportFractionChanged) {
+    if (controllerChanged ||
+        loopChanged ||
+        initialPageChanged ||
+        viewportFractionChanged) {
       _stopAutoPlay();
       if (oldWidget.controller == null) {
         _internalController?.dispose();
@@ -157,7 +172,7 @@ class _ExpressiveCarouselState extends State<ExpressiveCarousel> {
       if (!mounted || !_controller.hasClients) return;
       final page = _controller.page ?? _controller.initialPage.toDouble();
       final nextPage = page.round() + 1;
-      
+
       if (!widget.loop && nextPage >= widget.items.length) {
         _controller.animateToPage(
           0,
@@ -181,18 +196,19 @@ class _ExpressiveCarouselState extends State<ExpressiveCarousel> {
 
   void _onIndicatorTapped(int targetIndex) {
     if (!_controller.hasClients || widget.items.isEmpty) return;
-    
+
     _stopAutoPlay();
-    
+
     if (widget.loop) {
-      final double currentPage = _controller.page ?? _controller.initialPage.toDouble();
+      final double currentPage =
+          _controller.page ?? _controller.initialPage.toDouble();
       final int currentIntPage = currentPage.round();
       final int currentRealIndex = currentIntPage % widget.items.length;
-      
+
       // Calculate index difference and target page index closest to the current page index
       final int diff = targetIndex - currentRealIndex;
       final int targetPage = currentIntPage + diff;
-      
+
       _controller.animateToPage(
         targetPage,
         duration: widget.autoPlayDuration,
@@ -214,10 +230,14 @@ class _ExpressiveCarouselState extends State<ExpressiveCarousel> {
       return SizedBox(height: widget.height);
     }
 
+    final tokens = ExpressiveTheme.of(context);
+    final borderRadius = widget.borderRadius ?? tokens.radius.xl;
+    final spacing = widget.spacing ?? tokens.spacing.md;
+
     final Widget pageView = PageView.builder(
       controller: _controller,
       physics: ExpressivePageScrollPhysics(
-        expressiveSpring: widget.spring,
+        expressiveSpring: widget.spring ?? ExpressiveComponentMotion.carousel,
         parent: const BouncingScrollPhysics(),
       ),
       itemCount: _itemCount,
@@ -235,7 +255,8 @@ class _ExpressiveCarouselState extends State<ExpressiveCarousel> {
           builder: (context, child) {
             double diff = 0.0;
             if (_controller.position.haveDimensions) {
-              final page = _controller.page ?? _controller.initialPage.toDouble();
+              final page =
+                  _controller.page ?? _controller.initialPage.toDouble();
               diff = page - index;
             } else {
               diff = (_initialPageIndex - index).toDouble();
@@ -245,8 +266,8 @@ class _ExpressiveCarouselState extends State<ExpressiveCarousel> {
 
             // Interpolate standard BorderRadius
             final double currentRadius = lerpDouble(
-              widget.borderRadius,
-              widget.borderRadius * 0.7,
+              borderRadius,
+              borderRadius * 0.7,
               t,
             )!;
 
@@ -258,15 +279,16 @@ class _ExpressiveCarouselState extends State<ExpressiveCarousel> {
             // Apply dynamic padding/shrinking (height and width)
             final double vertPadding = lerpDouble(0, widget.height * 0.08, t)!;
             final double horizPadding = lerpDouble(
-              widget.spacing / 2,
-              widget.spacing / 2 + 8,
+              spacing / 2,
+              spacing / 2 + 8,
               t,
             )!;
 
             return GestureDetector(
               onTap: () {
                 if (_controller.hasClients) {
-                  final currentPage = _controller.page ?? _controller.initialPage.toDouble();
+                  final currentPage =
+                      _controller.page ?? _controller.initialPage.toDouble();
                   final currentIntPage = currentPage.round();
                   if (index != currentIntPage) {
                     _stopAutoPlay();
@@ -312,7 +334,7 @@ class _ExpressiveCarouselState extends State<ExpressiveCarousel> {
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(height: widget.height, child: carousel),
-          const SizedBox(height: 12),
+          SizedBox(height: tokens.spacing.md),
           AnimatedBuilder(
             animation: _controller,
             builder: (context, _) {
@@ -330,27 +352,35 @@ class _ExpressiveCarouselState extends State<ExpressiveCarousel> {
                   double diff = 0.0;
                   if (widget.loop) {
                     final double currentPageMod = page % widget.items.length;
-                    
+
                     // Handle wrap-around distance for correct indicator dot scaling
                     final d1 = (currentPageMod - index).abs();
-                    final d2 = (currentPageMod - (index + widget.items.length)).abs();
-                    final d3 = ((currentPageMod + widget.items.length) - index).abs();
-                    diff = [d1, d2, d3].reduce((value, element) => value < element ? value : element);
+                    final d2 = (currentPageMod - (index + widget.items.length))
+                        .abs();
+                    final d3 = ((currentPageMod + widget.items.length) - index)
+                        .abs();
+                    diff = [d1, d2, d3].reduce(
+                      (value, element) => value < element ? value : element,
+                    );
                   } else {
                     diff = (page - index).abs();
                   }
 
                   final activeFactor = (1.0 - diff).clamp(0.0, 1.0);
-                  
+
                   final width = lerpDouble(8, 24, activeFactor)!;
                   const height = 8.0;
                   final opacity = lerpDouble(0.4, 1.0, activeFactor)!;
-                  final color = Theme.of(context).colorScheme.primary.withValues(alpha: opacity);
+                  final color = Theme.of(context).colorScheme.primary
+                      .withValues(alpha: opacity);
 
                   return GestureDetector(
                     onTap: () => _onIndicatorTapped(index),
                     child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                        vertical: 8,
+                      ),
                       width: width,
                       height: height,
                       decoration: BoxDecoration(
