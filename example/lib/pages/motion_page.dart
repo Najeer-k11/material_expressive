@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:material_expressive/material_expressive.dart';
 
 class MotionPage extends StatefulWidget {
@@ -113,8 +113,8 @@ class _MotionPageState extends State<MotionPage> with TickerProviderStateMixin {
                 children: [
                   StateMorphContainer(
                     isActive: _morphActive,
-                    activeShape: MaterialShapes.circle,
-                    inactiveShape: MaterialShapes.square,
+                    activeShape: ExpressiveShapes.circle,
+                    inactiveShape: ExpressiveShapes.square,
                     activeColor: scheme.primary,
                     inactiveColor: scheme.surfaceContainerHigh,
                     size: 72,

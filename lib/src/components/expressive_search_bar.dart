@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// An expressive search bar that morphs from collapsed to expanded with spring.
 class ExpressiveSearchBar extends StatefulWidget {

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Shows an expressive snackbar with icon, shape, and spring dismiss.
 void showExpressiveSnackBar(

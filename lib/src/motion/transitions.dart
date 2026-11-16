@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:animations/animations.dart';
 
 /// Expressive transitions built on the `animations` package.

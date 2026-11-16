@@ -5,8 +5,8 @@ import 'package:flutter/painting.dart';
 ///
 /// Each shape is defined as a list of normalized points (0..1 range)
 /// that can be interpolated for shape morphing.
-class MaterialShapes {
-  MaterialShapes._(); 
+class ExpressiveShapes {
+  ExpressiveShapes._(); 
   static List<Offset> get circle => _polygon(32, 0);
   static List<Offset> get square => _roundedRect(0.15);
   static List<Offset> get pill => _pill();

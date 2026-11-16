@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Device form factor for adaptive layouts.
 enum DeviceType { phone, tablet, desktop }

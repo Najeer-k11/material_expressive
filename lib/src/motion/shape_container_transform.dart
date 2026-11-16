@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../shapes/shape_morph.dart';
 import '../shapes/material_shapes.dart';
 
@@ -32,7 +32,7 @@ class _ShapeContainerTransformState extends State<ShapeContainerTransform> {
   void _open() {
     Navigator.of(context).push(
       _ShapeTransformRoute(
-        closedShape: widget.closedShape ?? MaterialShapes.circle,
+        closedShape: widget.closedShape ?? ExpressiveShapes.circle,
         openBuilder: widget.openBuilder,
         duration: widget.duration,
         curve: widget.curve,
@@ -47,7 +47,7 @@ class _ShapeContainerTransformState extends State<ShapeContainerTransform> {
   Widget build(BuildContext context) {
     final color =
         widget.closedColor ?? Theme.of(context).colorScheme.primaryContainer;
-    final shape = widget.closedShape ?? MaterialShapes.circle;
+    final shape = widget.closedShape ?? ExpressiveShapes.circle;
     return SizedBox(
       width: widget.closedSize,
       height: widget.closedSize,
@@ -80,7 +80,7 @@ class _ShapeTransformRoute extends PageRouteBuilder<void> {
              builder: (context, _) {
                final points = lerpShapePoints(
                  closedShape,
-                 MaterialShapes.square,
+                 ExpressiveShapes.square,
                  curvedAnim.value,
                );
                return ClipPath(

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// An overlay that visualizes spacing grid.
 class SpacingOverlay extends StatelessWidget {

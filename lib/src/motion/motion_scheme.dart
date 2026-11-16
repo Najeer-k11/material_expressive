@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/physics.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A spring specification for physics-based animation.
 class ExpressiveSpring {

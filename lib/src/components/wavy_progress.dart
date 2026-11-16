@@ -1,5 +1,5 @@
 import 'dart:math' as math;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A wavy/sinusoidal linear progress indicator (M3 Expressive style).
 ///

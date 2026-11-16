@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:material_expressive/material_expressive.dart';
 
 class ShapesPage extends StatefulWidget {
@@ -11,7 +11,7 @@ class ShapesPage extends StatefulWidget {
 class _ShapesPageState extends State<ShapesPage> {
   int _morphIndex = 0;
 
-  static const _allShapes = MaterialShapes.allNames;
+  static const _allShapes = ExpressiveShapes.allNames;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class _ShapesPageState extends State<ShapesPage> {
                     decoration: ShapeDecoration(
                       color: scheme.primaryContainer,
                       shape: MorphableShapeBorder(
-                        points: MaterialShapes.byName(name),
+                        points: ExpressiveShapes.byName(name),
                       ),
                     ),
                   ),
@@ -72,7 +72,7 @@ class _ShapesPageState extends State<ShapesPage> {
               child: Column(
                 children: [
                   ShapeMorph(
-                    shape: MaterialShapes.byName(_allShapes[_morphIndex]),
+                    shape: ExpressiveShapes.byName(_allShapes[_morphIndex]),
                     size: 140,
                     color: scheme.primary,
                     duration: const Duration(milliseconds: 500),
@@ -110,7 +110,7 @@ class _ShapesPageState extends State<ShapesPage> {
                     height: 56,
                     decoration: ShapeDecoration(
                       color: scheme.secondaryContainer,
-                      shape: MorphableShapeBorder(points: MaterialShapes.arrow),
+                      shape: MorphableShapeBorder(points: ExpressiveShapes.arrow),
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -125,7 +125,7 @@ class _ShapesPageState extends State<ShapesPage> {
                     decoration: ShapeDecoration(
                       color: scheme.tertiaryContainer,
                       shape: MorphableShapeBorder(
-                        points: RtlShapes.flipHorizontal(MaterialShapes.arrow),
+                        points: RtlShapes.flipHorizontal(ExpressiveShapes.arrow),
                       ),
                     ),
                   ),
@@ -141,7 +141,7 @@ class _ShapesPageState extends State<ShapesPage> {
                     decoration: ShapeDecoration(
                       color: scheme.primaryContainer,
                       shape: MorphableShapeBorder(
-                        points: RtlShapes.rotate(MaterialShapes.arrow, 0.25),
+                        points: RtlShapes.rotate(ExpressiveShapes.arrow, 0.25),
                       ),
                     ),
                   ),
@@ -161,7 +161,7 @@ class _ShapesPageState extends State<ShapesPage> {
             children: [
               Material(
                 color: scheme.primary,
-                shape: MorphableShapeBorder(points: MaterialShapes.clover4Leaf),
+                shape: MorphableShapeBorder(points: ExpressiveShapes.clover4Leaf),
                 clipBehavior: Clip.antiAlias,
                 child: const SizedBox(
                   width: 72,
@@ -173,7 +173,7 @@ class _ShapesPageState extends State<ShapesPage> {
               ),
               Material(
                 color: scheme.secondary,
-                shape: MorphableShapeBorder(points: MaterialShapes.sunny),
+                shape: MorphableShapeBorder(points: ExpressiveShapes.sunny),
                 clipBehavior: Clip.antiAlias,
                 child: const SizedBox(
                   width: 72,
@@ -183,7 +183,7 @@ class _ShapesPageState extends State<ShapesPage> {
               ),
               Material(
                 color: scheme.tertiary,
-                shape: MorphableShapeBorder(points: MaterialShapes.heart),
+                shape: MorphableShapeBorder(points: ExpressiveShapes.heart),
                 clipBehavior: Clip.antiAlias,
                 child: const SizedBox(
                   width: 72,

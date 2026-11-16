@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Shows an expressive bottom sheet with spring-based drag physics.
 Future<T?> showExpressiveBottomSheet<T>({

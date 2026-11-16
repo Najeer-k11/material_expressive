@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// An expressive action chip — pill/stadium shaped with icon + label.
 ///

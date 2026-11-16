@@ -18,7 +18,7 @@ Inspired by Google's M3 Expressive redesign announced at I/O 2025.
 
 ```yaml
 dependencies:
-  material_expressive: ^0.8.0
+  material_expressive: ^0.9.0
 ```
 
 ```dart
@@ -71,7 +71,7 @@ Import only what you need:
 | -------------------------- | ------------------------------------------------------------------------ |
 | `material_expressive.dart` | Everything                                                               |
 | `tokens.dart`              | Design tokens (colors, spacing, radius, elevation, motion, typography)   |
-| `shapes.dart`              | 35 MaterialShapes + morphing + RTL                                       |
+| `shapes.dart`              | 35 ExpressiveShapes + morphing + RTL                                       |
 | `motion.dart`              | Spring physics, MotionScheme, transitions, gesture spring, accessibility |
 | `theme.dart`               | Theme generation, vibrant colors, color harmonization                    |
 | `components.dart`          | Surfaces, icons, buttons, carousel, dialog, sheet, snackbar, search      |
@@ -89,21 +89,21 @@ All official M3 Expressive shapes, each defined as interpolatable points:
 // Use as static decoration
 Container(
   decoration: ShapeDecoration(
-    shape: MorphableShapeBorder(points: MaterialShapes.heart),
+    shape: MorphableShapeBorder(points: ExpressiveShapes.heart),
     color: Colors.pink,
   ),
 )
 
 // Animate between shapes
 ShapeMorph(
-  shape: MaterialShapes.flower,  // change this → smooth morph
+  shape: ExpressiveShapes.flower,  // change this → smooth morph
   size: 80,
   color: scheme.primary,
   duration: Duration(milliseconds: 500),
 )
 
 // RTL-aware
-RtlShapes.directional(context, MaterialShapes.arrow)
+RtlShapes.directional(context, ExpressiveShapes.arrow)
 ```
 
 **All shapes:** circle, square, pill, diamond, triangle, pentagon, arch, arrow, heart, flower, clover4Leaf, clover8Leaf, cookie4/6/7/9/12Sided, boom, softBoom, burst, softBurst, sunny, verySunny, fan, gem, ghostish, bun, oval, puffy, puffyDiamond, semiCircle, slanted, pixelCircle, pixelTriangle, clamShell.
@@ -320,8 +320,8 @@ showExpressiveSnackBar(context,
 ```dart
 StateMorphContainer(
   isActive: _selected,
-  activeShape: MaterialShapes.circle,
-  inactiveShape: MaterialShapes.square,
+  activeShape: ExpressiveShapes.circle,
+  inactiveShape: ExpressiveShapes.square,
   spring: MotionScheme.expressive.defaultSpatial,
   child: Icon(Icons.star),
 )
@@ -331,7 +331,7 @@ StateMorphContainer(
 
 ```dart
 ShapeContainerTransform(
-  closedShape: MaterialShapes.circle,
+  closedShape: ExpressiveShapes.circle,
   closedSize: 56,
   closedBuilder: (ctx, open) => IconButton(icon: Icon(Icons.add), onPressed: open),
   openBuilder: (ctx, close) => DetailScreen(onBack: close),

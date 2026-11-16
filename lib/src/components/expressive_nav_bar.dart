@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../shapes/material_shapes.dart';
 import '../shapes/shape_morph.dart';
 import '../motion/motion_scheme.dart';
@@ -119,8 +119,8 @@ class _StateMorphContainerState extends State<StateMorphContainer>
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final activeShape = widget.activeShape ?? MaterialShapes.circle;
-    final inactiveShape = widget.inactiveShape ?? MaterialShapes.square;
+    final activeShape = widget.activeShape ?? ExpressiveShapes.circle;
+    final inactiveShape = widget.inactiveShape ?? ExpressiveShapes.square;
     final activeColor = widget.activeColor ?? scheme.primaryContainer;
     final inactiveColor = widget.inactiveColor ?? scheme.surfaceContainerHigh;
 

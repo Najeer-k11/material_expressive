@@ -3,6 +3,8 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   errors:
     invalid_dependency: ignore
+  exclude:
+    - build/**
 
 linter:
   rules:

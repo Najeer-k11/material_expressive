@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:material_expressive/material_expressive.dart';
 
 class ComponentsPage extends StatefulWidget {
@@ -187,8 +187,8 @@ class _ComponentsPageState extends State<ComponentsPage> {
               onTap: () => setState(() => _morphActive = !_morphActive),
               child: StateMorphContainer(
                 isActive: _morphActive,
-                activeShape: MaterialShapes.heart,
-                inactiveShape: MaterialShapes.circle,
+                activeShape: ExpressiveShapes.heart,
+                inactiveShape: ExpressiveShapes.circle,
                 activeColor: scheme.primary,
                 inactiveColor: scheme.surfaceContainerHigh,
                 size: 80,

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../tokens/shape_tokens.dart';
 import 'expressive_input_themes.dart';
 

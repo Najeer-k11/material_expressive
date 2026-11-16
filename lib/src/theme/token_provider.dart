@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../tokens/spacing_tokens.dart';
 import '../core/adaptive.dart';
 import 'expressive_theme_data.dart';

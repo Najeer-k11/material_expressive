@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'vibrant_colors.dart';
 
 /// Harmonizes custom colors with a theme's seed color.

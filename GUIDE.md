@@ -151,7 +151,7 @@ MotionAccessibility.adaptiveSpring(context, MotionScheme.expressive.defaultSpati
 
 ## Shape System
 
-35 shapes matching the official Compose `MaterialShapes` API.
+35 shapes matching the official Compose `ExpressiveShapes` API.
 
 ### How shapes work
 
@@ -167,7 +167,7 @@ Each shape is a `List<Offset>` of 32 normalized points (x/y in 0..1 range). This
 ```dart
 // The ShapeMorph widget handles animation automatically
 ShapeMorph(
-  shape: MaterialShapes.heart,  // change this reference → animates
+  shape: ExpressiveShapes.heart,  // change this reference → animates
   size: 100,
   color: Colors.red,
   duration: Duration(milliseconds: 600),
@@ -181,8 +181,8 @@ Under the hood: `lerpShapePoints(shapeA, shapeB, t)` interpolates point-by-point
 ```dart
 StateMorphContainer(
   isActive: _isSelected,
-  activeShape: MaterialShapes.circle,
-  inactiveShape: MaterialShapes.square,
+  activeShape: ExpressiveShapes.circle,
+  inactiveShape: ExpressiveShapes.square,
   spring: MotionScheme.expressive.defaultSpatial,
   child: Icon(Icons.check),
 )
@@ -252,7 +252,7 @@ Directional shapes (arrows, fans) auto-flip in RTL contexts:
 
 ```dart
 // Automatically mirrors for RTL
-final shape = RtlShapes.directional(context, MaterialShapes.arrow);
+final shape = RtlShapes.directional(context, ExpressiveShapes.arrow);
 
 // Manual transforms
 RtlShapes.flipHorizontal(shape)
@@ -417,9 +417,9 @@ Size mapping:
 ### Custom shapes on icons
 
 ```dart
-// Use any of the 35 MaterialShapes as the icon container
+// Use any of the 35 ExpressiveShapes as the icon container
 ExpressiveIcon(Icons.star,
-  shape: MaterialShapes.heart,  // custom shape points
+  shape: ExpressiveShapes.heart,  // custom shape points
 )
 ```
 
@@ -458,7 +458,7 @@ For the best experience, use the `material_symbols_icons` package:
 
 ```yaml
 dependencies:
-  material_expressive: ^0.3.0
+  material_expressive: ^0.9.0
   material_symbols_icons: ^4.0.0
 ```
 

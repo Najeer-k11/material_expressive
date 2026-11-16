@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Generates vibrant/expressive color schemes with boosted saturation
 /// and deliberate hue contrast between primary/secondary/tertiary.

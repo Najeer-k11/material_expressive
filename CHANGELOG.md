@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.9.0
+
+### Migrated to the decoupled Material library (`material_ui`)
+
+Flutter 3.47+ deprecates `package:flutter/material.dart` in favor of the standalone
+[`material_ui`](https://pub.dev/packages/material_ui) package. This release moves to it.
+
+- **Breaking:** requires Flutter `>=3.47.0` and Dart `^3.13.0`.
+- Depends on `material_ui: ^1.11.0`; all internal imports now use `package:material_ui/material_ui.dart`.
+- Bumped `animations` to `^3.0.0` (also built on `material_ui`, so its types match).
+- **Breaking:** `MaterialShapes` renamed to **`ExpressiveShapes`**. `material_ui` now exports its own
+  `MaterialShapes` (`RoundedPolygon`-based), so keeping the old name would cause `ambiguous_import`
+  errors for anyone importing both packages.
+
+#### Migrating
+
+```dart
+// before
+import 'package:flutter/material.dart';
+final pts = MaterialShapes.cookie9Sided;
+
+// after
+import 'package:material_ui/material_ui.dart';
+final pts = ExpressiveShapes.cookie9Sided;
+```
+
+Add `material_ui` to your app's `pubspec.yaml` dependencies. Running `dart fix --apply` also migrates
+the old Material import in your own code.
+
 ## 0.8.0
 
 ### Demo App Enhancements

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'motion_scheme.dart';
 
 /// A widget that responds to drag gestures with spring physics.

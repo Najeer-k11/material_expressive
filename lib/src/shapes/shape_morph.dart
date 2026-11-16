@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Builds a smooth closed path through points using Catmull-Rom spline.
 Path _smoothPath(List<Offset> points, Size size) {
@@ -68,7 +68,7 @@ List<Offset> _resample(List<Offset> points, int count) {
   return result;
 }
 
-/// A widget that morphs between two MaterialShapes with animation.
+/// A widget that morphs between two ExpressiveShapes with animation.
 class ShapeMorph extends StatefulWidget {
   const ShapeMorph({
     super.key,
@@ -81,7 +81,7 @@ class ShapeMorph extends StatefulWidget {
     this.border,
   });
 
-  /// Target shape points (use MaterialShapes.circle, etc).
+  /// Target shape points (use ExpressiveShapes.circle, etc).
   final List<Offset> shape;
   final double size;
   final Color? color;
@@ -188,7 +188,7 @@ class _ShapePainter extends CustomPainter {
       points != old.points || color != old.color;
 }
 
-/// A ShapeBorder that renders any MaterialShapes polygon.
+/// A ShapeBorder that renders any ExpressiveShapes polygon.
 class MorphableShapeBorder extends OutlinedBorder {
   const MorphableShapeBorder({required this.points, super.side});
 

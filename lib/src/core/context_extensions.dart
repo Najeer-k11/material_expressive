@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Core context extensions for quick access to theme properties.
 extension ExpressiveBuildContext on BuildContext {
